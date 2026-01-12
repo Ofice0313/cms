@@ -30,3 +30,19 @@ INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, insp
 INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (17000.00, 9000.00, 13000.00, 3800.00, 4800.00, 2300.00, 1700.00, 3300.00, '2022-04-12', 8, 8);
 INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (13000.00, 7200.00, 10000.00, 3000.00, 4000.00, 1850.00, 1350.00, 2600.00, '2021-07-25', 9, 9);
 INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (20000.00, 10500.00, 15500.00, 4500.00, 5500.00, 2800.00, 2000.00, 3800.00, '2023-02-14', 10, 10);
+
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('João', 'Silva', 'joao.silva@empresa.com', '(11) 98765-4321');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Maria', 'Santos', 'maria.santos@email.com.br', '(21) 99876-5432');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Carlos', 'Oliveira', 'carlos.oliveira@companhia.com', '(31) 97654-3210');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Ana', 'Costa', 'ana.costa@dominio.com', '(41) 96543-2109');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Pedro', 'Almeida', 'pedro.almeida@negocio.com', '(51) 95432-1098');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Juliana', 'Pereira', 'juliana.pereira@corp.com', '(61) 94321-0987');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Ricardo', 'Rodrigues', 'ricardo.rodrigues@firma.com', '(71) 93210-9876');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Fernanda', 'Lima', 'fernanda.lima@empresarial.com', '(81) 92109-8765');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Lucas', 'Gomes', 'lucas.gomes@comercial.com', '(85) 91098-7654');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Patrícia', 'Martins', 'patricia.martins@business.com', '(98) 90987-6543');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Roberto', 'Ferreira', 'roberto.ferreira@enterprise.com', '(67) 89876-5432');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Amanda', 'Rocha', 'amanda.rocha@group.com', '(27) 88765-4321');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Marcos', 'Barbosa', 'marcos.barbosa@holdings.com', '(19) 87654-3210');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Cristina', 'Nascimento', 'cristina.nascimento@corporation.com', '(47) 86543-2109');
+INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Diego', 'Carvalho', 'diego.carvalho@international.com', '(92) 85432-1098');
