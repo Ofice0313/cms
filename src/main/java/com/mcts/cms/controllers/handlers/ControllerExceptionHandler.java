@@ -1,6 +1,7 @@
 package com.mcts.cms.controllers.handlers;
 
 import com.mcts.cms.dto.CustomError;
+import com.mcts.cms.services.exceptions.BusinessException;
 import com.mcts.cms.services.exceptions.DatabaseException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,13 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<CustomError> database(ResourceNotFoundException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        CustomError error = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<CustomError> business(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         CustomError error = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(error);
