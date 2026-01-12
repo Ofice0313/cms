@@ -46,3 +46,21 @@ INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Amanda', 'R
 INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Marcos', 'Barbosa', 'marcos.barbosa@holdings.com', '(19) 87654-3210');
 INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Cristina', 'Nascimento', 'cristina.nascimento@corporation.com', '(47) 86543-2109');
 INSERT INTO tb_client (first_name, last_name, email, phone) VALUES ('Diego', 'Carvalho', 'diego.carvalho@international.com', '(92) 85432-1098');
+
+-- Seed data para tabela tb_sale
+-- Relacionando com clientes (id 1-15) e pedidos (id 1-10)
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (550000.00, '2021-04-15', 'Venda realizada com sucesso. Cliente satisfeito.', 1, 1);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (520000.00, '2020-07-25', 'Pagamento à vista. Documentação completa.', 2, 2);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (580000.00, '2022-02-20', 'Financiamento aprovado. Entrega agendada.', 3, 3);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (480000.00, '2019-12-10', 'Venda com desconto especial. Cliente antigo.', 4, 4);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (570000.00, '2023-09-05', 'Documentação em dia. IPVA pago.', 5, 5);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (530000.00, '2021-06-20', 'Venda para concessionária. Lote fechado.', 6, 6);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (510000.00, '2020-11-15', 'Cliente particular. Pagamento parcelado.', 7, 7);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (560000.00, '2022-05-18', 'Exportação para Paraguai. Documentação internacional.', 8, 8);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (525000.00, '2021-08-30', 'Venda com garantia estendida. Revisão incluída.', 9, 9);
+INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (590000.00, '2023-03-25', 'Cliente corporativo. Frota empresarial.', 10, 10);
+--INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (54500.00, '2022-08-12', 'Leilão online. Arrematante presente.', 11, 1);
+--INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (53500.00, '2021-11-08', 'Troca de veículo. Diferencial financiado.', 12, 2);
+--INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (57500.00, '2023-01-15', 'Venda direta. Sem intermediários.', 13, 3);
+--INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (49500.00, '2020-03-22', 'Veículo de demonstração. Quilometragem baixa.', 14, 4);
+--INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (56500.00, '2022-10-30', 'Cliente VIP. Tratamento diferenciado.', 15, 5);

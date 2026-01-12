@@ -40,9 +40,6 @@ public class Acquisition {
     @OneToOne(mappedBy = "acquisition", cascade = CascadeType.ALL)
     private Order order;
 
-    @OneToOne(mappedBy = "acquisition", cascade = CascadeType.ALL)
-    private Sale sale;
-
     public BigDecimal getTotal() {
         return Stream.of(purchaseValue, travel)
                 .filter(Objects::nonNull)

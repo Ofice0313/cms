@@ -23,13 +23,13 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-
     @Autowired
     private OrderRepository repository;
 
     @Autowired
     private AcquisitionRepository acquisitionRepository;
 
+    @Autowired
     private VehicleRepository vehicleRepository;
 
     @Transactional(readOnly = true)

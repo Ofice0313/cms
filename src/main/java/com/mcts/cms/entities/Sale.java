@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Data
 @AllArgsConstructor
@@ -29,15 +32,17 @@ public class Sale {
     private Client client;
 
     @OneToOne
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
-
-    @OneToOne
-    @JoinColumn(name = "acquisition_id")
-    private Acquisition acquisition;
-
-    @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    public BigDecimal getProfit() {
+        return Optional.ofNullable(saleValue)
+                .flatMap(saleVal -> Optional.ofNullable(order)
+                        .flatMap(orderObj -> Optional.ofNullable(orderObj.getInvestment())
+                                .map(investment -> saleVal.subtract(investment))
+                        )
+                )
+                .orElse(BigDecimal.ZERO);
+    }
 
 }

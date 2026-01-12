@@ -78,8 +78,6 @@ public class Order {
     @MapsId
     private Vehicle vehicle;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Sale sale;
 
     public BigDecimal getTotal() {
         return Stream.of(rights, cp, innater, loading, customsBroker, driver, inspection, licensePlate)
