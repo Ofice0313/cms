@@ -1,0 +1,10 @@
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Toyota', 'Corolla', 2021, '2021-03-15', '2021-03-15', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Honda', 'Civic', 2020, '2020-06-20', '2020-06-20', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Ford', 'Ranger', 2022, '2022-01-10', '2022-01-10', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Chevrolet', 'Onix', 2019, '2019-11-05', '2019-11-05', 1);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Volkswagen', 'Polo', 2023, '2023-08-22', '2023-08-22', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Nissan', 'Kicks', 2021, '2021-05-18', '2021-05-18', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Hyundai', 'HB20', 2020, '2020-09-30', '2020-09-30', 1);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Renault', 'Duster', 2022, '2022-04-12', '2022-04-12', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Fiat', 'Argo', 2021, '2021-07-25', '2021-07-25', 0);
+INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Jeep', 'Compass', 2023, '2023-02-14', '2023-02-14', 0);
