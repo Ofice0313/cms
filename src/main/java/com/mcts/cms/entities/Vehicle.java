@@ -31,6 +31,12 @@ public class Vehicle {
     private LocalDate registrationDate = LocalDate.now();
     private StatusVehicle status;
 
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private Acquisition acquisition;
+
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private Sale sale;
+
     @PrePersist
     protected void onCreate() {
         if (registrationDate == null) {
