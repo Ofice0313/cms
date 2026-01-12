@@ -8,3 +8,25 @@ INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, regis
 INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Renault', 'Duster', 2022, '2022-04-12', '2022-04-12', 0);
 INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Fiat', 'Argo', 2021, '2021-07-25', '2021-07-25', 0);
 INSERT INTO tb_vehicle (brand, model, manufactured_year, acquisition_date, registration_date, status) VALUES ('Jeep', 'Compass', 2023, '2023-02-14', '2023-02-14', 0);
+
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (85000.00, 25000.50, 1);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (78000.00, 32000.75, 2);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (125000.00, 15000.00, 3);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (45000.00, 68000.25, 4);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (95000.00, 8500.00, 5);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (72000.00, 42000.50, 6);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (55000.00, 55000.80, 7);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (98000.00, 28000.00, 8);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (62000.00, 35000.60, 9);
+INSERT INTO tb_acquisition (purchase_value, travel, vehicle_id) VALUES (145000.00, 12000.00, 10);
+
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (15000.00, 8500.50, 12000.00, 3500.00, 4500.00, 2000.00, 1500.00, 3000.00, '2021-03-15', 1, 1);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (13500.00, 7800.00, 11000.00, 3200.00, 4200.00, 1800.00, 1400.00, 2800.00, '2020-06-20', 2, 2);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (18000.00, 9500.00, 14000.00, 4000.00, 5000.00, 2500.00, 1800.00, 3500.00, '2022-01-10', 3, 3);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (10000.00, 6000.00, 8500.00, 2500.00, 3500.00, 1500.00, 1200.00, 2200.00, '2019-11-05', 4, 4);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (16500.00, 8800.00, 12500.00, 3600.00, 4600.00, 2100.00, 1600.00, 3100.00, '2023-08-22', 5, 5);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (14000.00, 7500.00, 10500.00, 3100.00, 4100.00, 1900.00, 1450.00, 2700.00, '2021-05-18', 6, 6);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (12000.00, 6800.00, 9500.00, 2800.00, 3800.00, 1700.00, 1300.00, 2500.00, '2020-09-30', 7, 7);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (17000.00, 9000.00, 13000.00, 3800.00, 4800.00, 2300.00, 1700.00, 3300.00, '2022-04-12', 8, 8);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (13000.00, 7200.00, 10000.00, 3000.00, 4000.00, 1850.00, 1350.00, 2600.00, '2021-07-25', 9, 9);
+INSERT INTO tb_order (rights, cp, innater, loading, customs_broker, driver, inspection, license_plate, order_date, vehicle_id, acquisition_id) VALUES (20000.00, 10500.00, 15500.00, 4500.00, 5500.00, 2800.00, 2000.00, 3800.00, '2023-02-14', 10, 10);

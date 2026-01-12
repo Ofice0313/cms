@@ -71,11 +71,11 @@ public class Order {
     private LocalDate orderDate = LocalDate.now();
 
     @OneToOne
-    @MapsId
+    @JoinColumn(name = "acquisition_id")
     private Acquisition acquisition;
 
     @OneToOne
-    @JoinColumn(name = "vehicle_id")
+    @MapsId
     private Vehicle vehicle;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
@@ -83,6 +83,12 @@ public class Order {
 
     public BigDecimal getTotal() {
         return Stream.of(rights, cp, innater, loading, customsBroker, driver, inspection, licensePlate)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getInvestment() {
+        return Stream.of(acquisition.getTotal(), getTotal())
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
