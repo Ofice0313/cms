@@ -75,5 +75,16 @@ public class VehicleService {
         vehicle.setAcquisitionDate(dto.getAcquisitionDate());
         vehicle.setRegistrationDate(dto.getRegistrationDate());
         vehicle.setStatus(dto.getStatus());
+        vehicle.setDriver(dto.getDriver());
+        vehicle.setInnater(dto.getInnater());
+        vehicle.setCp(dto.getCp());
+        vehicle.setInspection(dto.getInspection());
+        vehicle.setLoading(dto.getLoading());
+        vehicle.setRights(dto.getRights());
+        vehicle.setLicensePlate(dto.getLicensePlate());
+        vehicle.setCustomsBroker(dto.getCustomsBroker());
+        vehicle.setOrderDate(dto.getOrderDate());
+        vehicle.setPurchaseValue(dto.getPurchaseValue());
+        vehicle.setTravel(dto.getTravel());
     }
 }

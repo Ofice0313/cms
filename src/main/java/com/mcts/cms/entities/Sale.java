@@ -28,17 +28,18 @@ public class Sale {
     private String observations;
 
     @OneToOne
+    @MapsId
+    private Vehicle vehicle;
+
+    @OneToOne
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
 
     public BigDecimal getProfit() {
         return Optional.ofNullable(saleValue)
-                .flatMap(saleVal -> Optional.ofNullable(order)
-                        .flatMap(orderObj -> Optional.ofNullable(orderObj.getInvestment())
+                .flatMap(saleVal -> Optional.ofNullable(vehicle)
+                        .flatMap(orderObj -> Optional.ofNullable(orderObj.getTotalInvestment())
                                 .map(investment -> saleVal.subtract(investment))
                         )
                 )

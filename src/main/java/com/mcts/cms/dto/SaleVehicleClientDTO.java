@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaleOrderClientDTO {
+public class SaleVehicleClientDTO {
 
     private Long id;
     @JsonProperty("sale_value")
@@ -21,19 +21,21 @@ public class SaleOrderClientDTO {
     private LocalDate saleDate;
     private String observations;
 
+    @JsonProperty("client_id")
     private ClientDTO client;
 
-    private OrderDTO order;
+    @JsonProperty("vehicle_id")
+    private VehicleDTO vehicle;
 
     private BigDecimal profit;
 
-    public SaleOrderClientDTO(Sale entity) {
+    public SaleVehicleClientDTO(Sale entity) {
         this.id = entity.getId();
         this.saleDate = entity.getSaleDate();
         this.observations = entity.getObservations();
         this.saleValue = entity.getSaleValue();
         this.profit = entity.getProfit();
         this.client = new ClientDTO(entity.getClient());
-        this.order = new OrderDTO(entity.getOrder());
+        this.vehicle = new VehicleDTO(entity.getVehicle());
     }
 }

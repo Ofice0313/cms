@@ -2,8 +2,9 @@ package com.mcts.cms.entities.enuns;
 
 public enum StatusDeposit {
 
-    ACTIVE,
-    COMPLETED,
-    OVERDUE,
-    CANCELLED
+    PENDING,      // Aguardando pagamento
+    IN_PROGRESS,  // Pagamento em andamento
+    COMPLETED,    // Pagamento concluído
+    OVERDUE,      // Pagamento atrasado
+    CANCELLED     // Pagamento cancelado
 }

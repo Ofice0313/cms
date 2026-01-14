@@ -1,10 +1,14 @@
 package com.mcts.cms.controllers;
 
 import com.mcts.cms.dto.DepositVehicleInstallmentClientDTO;
+import com.mcts.cms.entities.Deposit;
 import com.mcts.cms.services.DepositService;
+import com.mcts.cms.services.requests.CreateDepositRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -48,5 +52,26 @@ public class DepositController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //PostMapping
+    public ResponseEntity<Deposit> createDeposit(@Valid @RequestBody CreateDepositRequest request) {
+        // Converte request para entidade
+        Deposit deposit = new Deposit();
+        deposit.setSaleValue(request.getSaleValue());
+        deposit.setInitialDepositValue(request.getInitialDepositValue());
+        deposit.setObservations(request.getObservations());
+        deposit.setDueDate(request.getDueDate());
+
+        // Aqui você precisaria buscar Vehicle e Client pelos IDs
+        // deposit.setVehicle(vehicleService.findById(request.getVehicleId()));
+        // deposit.setClient(clientService.findById(request.getClientId()));
+
+        Deposit createdDeposit = service.createDeposit(
+                deposit,
+                request.getNumberOfInstallments()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDeposit);
     }
 }

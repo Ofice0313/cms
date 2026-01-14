@@ -1,7 +1,6 @@
 package com.mcts.cms.services;
 
-import com.mcts.cms.dto.OrderAcquisitionVehicleDTO;
-import com.mcts.cms.dto.SaleOrderClientDTO;
+import com.mcts.cms.dto.SaleVehicleClientDTO;
 import com.mcts.cms.entities.*;
 import com.mcts.cms.repositories.*;
 import com.mcts.cms.services.exceptions.DatabaseException;
@@ -20,44 +19,43 @@ import java.util.Optional;
 @Service
 public class SaleService {
 
-
-    @Autowired
-    private OrderRepository orderRepository;
-
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
     @Autowired
     private SaleRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<SaleOrderClientDTO> findAllPaged(Pageable pageable) {
+    public Page<SaleVehicleClientDTO> findAllPaged(Pageable pageable) {
         Page<Sale> list = repository.findAll(pageable);
-        return list.map(x -> new SaleOrderClientDTO(x));
+        return list.map(x -> new SaleVehicleClientDTO(x));
     }
 
     @Transactional(readOnly = true)
-    public SaleOrderClientDTO findById(Long id) {
+    public SaleVehicleClientDTO findById(Long id) {
         Optional<Sale> obj = repository.findById(id);
         Sale entity = obj.orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
-        return new SaleOrderClientDTO(entity);
+        return new SaleVehicleClientDTO(entity);
     }
 
     @Transactional
-    public SaleOrderClientDTO insert(SaleOrderClientDTO dto) {
+    public SaleVehicleClientDTO insert(SaleVehicleClientDTO dto) {
         Sale entity = new Sale();
         copyDtoToEntity(dto, entity);
         entity = repository.save(entity);
-        return new SaleOrderClientDTO(entity);
+        return new SaleVehicleClientDTO(entity);
     }
 
     @Transactional
-    public SaleOrderClientDTO update(Long id, SaleOrderClientDTO dto) {
+    public SaleVehicleClientDTO update(Long id, SaleVehicleClientDTO dto) {
         try {
             Sale entity = repository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
-            return new SaleOrderClientDTO(entity);
+            return new SaleVehicleClientDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Resource not found!");
         }
@@ -76,13 +74,13 @@ public class SaleService {
         }
     }
 
-    private void copyDtoToEntity(SaleOrderClientDTO dto, Sale entity) {
+    private void copyDtoToEntity(SaleVehicleClientDTO dto, Sale entity) {
         entity.setSaleValue(dto.getSaleValue());
         entity.setObservations(dto.getObservations());
         entity.setSaleDate(dto.getSaleDate());
         Client client = clientRepository.getReferenceById(dto.getClient().getId());
-        Order order = orderRepository.getReferenceById(dto.getOrder().getId());
-        entity.setOrder(order);
+        Vehicle vehicle = vehicleRepository.getReferenceById(dto.getId());
         entity.setClient(client);
+        entity.setVehicle(vehicle);
     }
 }

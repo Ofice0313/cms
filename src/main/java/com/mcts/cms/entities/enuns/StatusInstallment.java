@@ -2,8 +2,8 @@ package com.mcts.cms.entities.enuns;
 
 public enum StatusInstallment {
 
-    PENDING,
-    PAID,
-    LATE,
-    CANCELLED
+    PENDING,      // Aguardando pagamento
+    PAID,         // Pago
+    OVERDUE,      // Atrasado
+    CANCELLED    // Cancelado
 }

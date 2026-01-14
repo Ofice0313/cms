@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mcts.cms.entities.Sale;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SaleDTO {
@@ -23,9 +24,9 @@ public class SaleDTO {
 
     private BigDecimal profit;
 
-    private Long client;
+    private Long vehicle;
 
-    private Long order;
+    private Long client;
 
     public SaleDTO(Sale entity) {
         this.id = entity.getId();
@@ -34,6 +35,5 @@ public class SaleDTO {
         this.saleValue = entity.getSaleValue();
         this.profit = entity.getProfit();
         this.client = entity.getClient().getId();
-        this.order = entity.getOrder().getId();
     }
 }

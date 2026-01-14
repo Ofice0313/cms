@@ -1,7 +1,6 @@
 package com.mcts.cms.controllers;
 
-import com.mcts.cms.dto.SaleOrderClientDTO;
-import com.mcts.cms.services.OrderService;
+import com.mcts.cms.dto.SaleVehicleClientDTO;
 import com.mcts.cms.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,19 +19,19 @@ public class SaleController {
     private SaleService service;
 
     @GetMapping(value = "/sales")
-    public ResponseEntity<Page<SaleOrderClientDTO>> findAllPage(Pageable pageable) {
-        Page<SaleOrderClientDTO> list = service.findAllPaged(pageable);
+    public ResponseEntity<Page<SaleVehicleClientDTO>> findAllPage(Pageable pageable) {
+        Page<SaleVehicleClientDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SaleOrderClientDTO> findById(@PathVariable Long id) {
-        SaleOrderClientDTO dto = service.findById(id);
+    public ResponseEntity<SaleVehicleClientDTO> findById(@PathVariable Long id) {
+        SaleVehicleClientDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping(value = "/sales")
-    public ResponseEntity<SaleOrderClientDTO> insert(@RequestBody SaleOrderClientDTO dto) {
+    public ResponseEntity<SaleVehicleClientDTO> insert(@RequestBody SaleVehicleClientDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -40,7 +39,7 @@ public class SaleController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<SaleOrderClientDTO> update(@PathVariable Long id, @RequestBody SaleOrderClientDTO dto) {
+    public ResponseEntity<SaleVehicleClientDTO> update(@PathVariable Long id, @RequestBody SaleVehicleClientDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }
