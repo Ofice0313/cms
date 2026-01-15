@@ -2,8 +2,11 @@ package com.mcts.cms.entities;
 
 import com.mcts.cms.entities.enuns.StatusDeposit;
 import com.mcts.cms.entities.enuns.StatusInstallment;
-import com.mcts.cms.entities.services.DepositService;
+import com.mcts.cms.entities.enuns.StatusVehicle;
+import com.mcts.cms.services.interfaces.DepositService;
+import com.mcts.cms.services.exceptions.BusinessException;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_deposit")
-public class Deposit implements DepositService {
+public class Deposit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +67,6 @@ public class Deposit implements DepositService {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Override
     @PrePersist
     @PreUpdate
     public void calculateRemaining() {
@@ -72,7 +74,6 @@ public class Deposit implements DepositService {
         this.updatedAt = LocalDateTime.now();
     }
 
-    @Override
     public BigDecimal getRemaining() {
         if (remainingAmount == null) {
             calculateRemaining();
@@ -80,7 +81,6 @@ public class Deposit implements DepositService {
         return remainingAmount;
     }
 
-    @Override
     public BigDecimal getTotalPaid() {
         BigDecimal total = initialDepositValue;
         if (installments != null) {
@@ -93,12 +93,10 @@ public class Deposit implements DepositService {
         return total;
     }
 
-    @Override
     public boolean isFullyPaid() {
         return getTotalPaid().compareTo(saleValue) >= 0;
     }
 
-    @Override
     public void updateStatus() {
         if (isFullyPaid()) {
             this.status = StatusDeposit.COMPLETED;
@@ -106,6 +104,22 @@ public class Deposit implements DepositService {
             this.status = StatusDeposit.IN_PROGRESS;
         } else {
             this.status = StatusDeposit.PENDING;
+        }
+    }
+
+    // Métodos auxiliares de domínio
+    public void addInstallment(Installment installment) {
+        if (this.installments == null) {
+            this.installments = new ArrayList<>();
+        }
+        installment.setDeposit(this);
+        this.installments.add(installment);
+    }
+
+    public void markAsPaid() {
+        this.status = StatusDeposit.COMPLETED;
+        if (this.vehicle != null) {
+            this.vehicle.setStatus(StatusVehicle.SOLD);
         }
     }
 }

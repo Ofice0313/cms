@@ -2,7 +2,9 @@ package com.mcts.cms.services;
 
 import com.mcts.cms.dto.SaleVehicleClientDTO;
 import com.mcts.cms.entities.*;
+import com.mcts.cms.entities.enuns.StatusVehicle;
 import com.mcts.cms.repositories.*;
+import com.mcts.cms.services.exceptions.BusinessException;
 import com.mcts.cms.services.exceptions.DatabaseException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -79,8 +81,12 @@ public class SaleService {
         entity.setObservations(dto.getObservations());
         entity.setSaleDate(dto.getSaleDate());
         Client client = clientRepository.getReferenceById(dto.getClient().getId());
-        Vehicle vehicle = vehicleRepository.getReferenceById(dto.getId());
+        Vehicle vehicle = vehicleRepository.getReferenceById(dto.getVehicle().getId());
+        if(vehicle.getStatus() != StatusVehicle.STOCK) {
+            throw new BusinessException("The vehicle has already been SOLD");
+        }
         entity.setClient(client);
         entity.setVehicle(vehicle);
+        vehicle.setStatus(StatusVehicle.SOLD);
     }
 }

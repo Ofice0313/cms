@@ -2,5 +2,6 @@ package com.mcts.cms.entities.enuns;
 
 public enum StatusVehicle {
     STOCK,
-    SOLD
+    SOLD,
+    IN_DEPOSIT
 }

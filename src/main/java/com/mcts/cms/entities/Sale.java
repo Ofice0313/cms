@@ -31,7 +31,7 @@ public class Sale {
     @MapsId
     private Vehicle vehicle;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
 

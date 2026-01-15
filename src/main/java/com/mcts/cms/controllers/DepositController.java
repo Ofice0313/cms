@@ -1,41 +1,46 @@
 package com.mcts.cms.controllers;
 
-import com.mcts.cms.dto.DepositVehicleInstallmentClientDTO;
-import com.mcts.cms.entities.Deposit;
-import com.mcts.cms.services.DepositService;
-import com.mcts.cms.services.requests.CreateDepositRequest;
-import jakarta.validation.Valid;
+import com.mcts.cms.dto.DepositVehicleClientDTO;
+import com.mcts.cms.dto.InstallmentDTO;
+import com.mcts.cms.dto.InstallmentPaymentDTO;
+import com.mcts.cms.services.DepositServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/deposit")
 public class DepositController {
 
     @Autowired
-    private DepositService service;
+    private DepositServiceImpl service;
 
     @GetMapping(value = "/deposits")
-    public ResponseEntity<Page<DepositVehicleInstallmentClientDTO>> findAllPage(Pageable pageable) {
-        Page<DepositVehicleInstallmentClientDTO> list = service.findAllPaged(pageable);
+    public ResponseEntity<Page<DepositVehicleClientDTO>> findAllPage(Pageable pageable) {
+        Page<DepositVehicleClientDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<DepositVehicleInstallmentClientDTO> findById(@PathVariable Long id) {
-        DepositVehicleInstallmentClientDTO dto = service.findById(id);
+    public ResponseEntity<DepositVehicleClientDTO> findById(@PathVariable Long id) {
+        DepositVehicleClientDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping(value = "/deposits")
-    public ResponseEntity<DepositVehicleInstallmentClientDTO> insert(@RequestBody DepositVehicleInstallmentClientDTO dto) {
+    public ResponseEntity<DepositVehicleClientDTO> insert(@RequestBody DepositVehicleClientDTO dto) {
+
+        if (dto.getDepositDate() == null) {
+            dto.setDepositDate(LocalDate.now());
+        }
+
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -43,7 +48,7 @@ public class DepositController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<DepositVehicleInstallmentClientDTO> update(@PathVariable Long id, @RequestBody DepositVehicleInstallmentClientDTO dto) {
+    public ResponseEntity<DepositVehicleClientDTO> update(@PathVariable Long id, @RequestBody DepositVehicleClientDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }
@@ -54,24 +59,34 @@ public class DepositController {
         return ResponseEntity.noContent().build();
     }
 
-    //PostMapping
-    public ResponseEntity<Deposit> createDeposit(@Valid @RequestBody CreateDepositRequest request) {
-        // Converte request para entidade
-        Deposit deposit = new Deposit();
-        deposit.setSaleValue(request.getSaleValue());
-        deposit.setInitialDepositValue(request.getInitialDepositValue());
-        deposit.setObservations(request.getObservations());
-        deposit.setDueDate(request.getDueDate());
-
-        // Aqui você precisaria buscar Vehicle e Client pelos IDs
-        // deposit.setVehicle(vehicleService.findById(request.getVehicleId()));
-        // deposit.setClient(clientService.findById(request.getClientId()));
-
-        Deposit createdDeposit = service.createDeposit(
-                deposit,
-                request.getNumberOfInstallments()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdDeposit);
+    /**
+     * POST /deposits/{id}/generate-installments - Gera parcelas para um depósito
+     */
+    @PostMapping(value = "/{id}/generate-installments")
+    public ResponseEntity<Void> generateInstallments(@PathVariable Long id) {
+        service.generateInstallments(id);
+        return ResponseEntity.ok().build();
     }
+
+    /**
+     * GET /deposits/{id}/installments - Lista parcelas de um depósito
+     */
+    @GetMapping("/{id}/installments")
+    public ResponseEntity<List<InstallmentDTO>> getInstallments(@PathVariable Long id) {
+        List<InstallmentDTO> installments = service.getInstallmentsByDepositId(id);
+        return ResponseEntity.ok(installments);
+    }
+
+    /**
+     * POST /deposits/{depositId}/installments/{installmentNumber}/pay - Paga uma parcela
+     */
+    @PostMapping("/{depositId}/installments/{installmentNumber}/pay")
+    public ResponseEntity<Void> payInstallment(@PathVariable Long depositId,
+                                               @PathVariable Integer installmentNumber,
+                                               @RequestBody InstallmentPaymentDTO paymentDTO) {
+        service.payInstallment(depositId, installmentNumber, paymentDTO.getPaymentDate());
+        return ResponseEntity.ok().build();
+    }
+
+
 }

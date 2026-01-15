@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +28,6 @@ public class Client {
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     private Deposit deposit;
 
-    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
-    private Sale buy;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Sale> buys = new ArrayList<>();
 }

@@ -27,7 +27,7 @@ public class InstallmentDTO {
     private LocalDate paymentDate;
     private StatusInstallment status;
 
-    private Long deposit;
+    private String observations;
 
     public InstallmentDTO(Installment entity) {
         this.id = entity.getId();
@@ -35,6 +35,6 @@ public class InstallmentDTO {
         this.paymentDate = entity.getPaymentDate();
         this.valuePerInstallment = entity.getValuePerInstallment();
         this.status = entity.getStatus();
-        this.deposit = entity.getDeposit().getId();
+        this.observations = entity.getObservations();
     }
 }
