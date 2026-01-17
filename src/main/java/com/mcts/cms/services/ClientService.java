@@ -1,7 +1,9 @@
 package com.mcts.cms.services;
 
+import com.mcts.cms.controllers.ClientController;
 import com.mcts.cms.dto.ClientDTO;
 import com.mcts.cms.entities.Client;
+import com.mcts.cms.mapper.ObjectMapper;
 import com.mcts.cms.repositories.ClientRepository;
 import com.mcts.cms.services.exceptions.DatabaseException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
@@ -15,6 +17,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ClientService {
@@ -32,7 +37,11 @@ public class ClientService {
     public ClientDTO findById(Long id) {
         Optional<Client> obj = repository.findById(id);
         Client entity = obj.orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
-        return new ClientDTO(entity);
+        var client = new ClientDTO(entity);
+
+        var dto = ObjectMapper.parseObject(client, ClientDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     @Transactional
@@ -73,5 +82,13 @@ public class ClientService {
         client.setPhone(dto.getPhone());
         client.setFirstName(dto.getFirstName());
         client.setLastName(dto.getLastName());
+    }
+
+    private void addHateoasLinks(ClientDTO dto) {
+//        dto.add(linkTo(methodOn(ClientController.class).findAllPage()).withRel("findAllPaged").withType("GET"));
+        dto.add(linkTo(methodOn(ClientController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(ClientController.class).insert(dto)).withRel("insert").withType("POST"));
+        dto.add(linkTo(methodOn(ClientController.class).update(dto.getId(), dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(ClientController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
     }
 }

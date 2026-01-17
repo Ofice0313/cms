@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mcts.cms.entities.Client;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @NoArgsConstructor
-public class ClientDTO {
+public class ClientDTO extends RepresentationModel<ClientDTO> {
 
     private Long id;
     @JsonProperty("first_name")
