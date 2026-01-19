@@ -1,6 +1,7 @@
 package com.mcts.cms.controllers.handlers;
 
 import com.mcts.cms.dto.CustomError;
+import com.mcts.cms.exceptions.InvalidJwtAuthenticationException;
 import com.mcts.cms.services.exceptions.BusinessException;
 import com.mcts.cms.services.exceptions.DatabaseException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
@@ -32,6 +33,13 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<CustomError> business(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        CustomError error = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public ResponseEntity<CustomError> handleInvalidJwtAuthenticationException(ResourceNotFoundException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
         CustomError error = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
