@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokeDTO {
+public class TokenDTO {
 
     private String userName;
     private Boolean authenticated;
