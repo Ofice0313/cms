@@ -29,7 +29,7 @@ public class CmsApplication {
 		DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
 
 		passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
-		var pass1 = passwordEncoder.encode("admin123");
+		var pass1 = passwordEncoder.encode("caleb123");
 		var pass2 = passwordEncoder.encode("admin234");
 
 		System.out.println("Pass1: " +pass1);

@@ -42,3 +42,17 @@ INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, vehicle_id)
 --INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (57500.00, '2023-01-15', 'Venda direta. Sem intermediários.', 13, 3);
 --INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (49500.00, '2020-03-22', 'Veículo de demonstração. Quilometragem baixa.', 14, 4);
 --INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (56500.00, '2022-10-30', 'Cliente VIP. Tratamento diferenciado.', 15, 5);
+
+INSERT INTO tb_permission (description) VALUES ('ROLE_ADMIN');
+INSERT INTO tb_permission (description) VALUES ('ROLE_MANAGER');
+INSERT INTO tb_permission (description) VALUES ('ROLE_COMMON_USER');
+
+INSERT INTO tb_users (user_name, full_name, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES ('leandro', 'Leandro Costa', '1e3cdeeaaaeeda173ff6d002e7cb5e3f91ebc354dcff52156c9eaba1793a3a5e5bee306c11099e22', b'1', b'1', b'1', b'1');
+INSERT INTO tb_users (user_name, full_name, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES ('flavio', 'Flavio Costa', '362ad02420268beeb22d3a1f0d92749df461d7f4b74c9433d7415bdeef1b2902f4eb1edaecb37cb3', b'1', b'1', b'1', b'1');
+INSERT INTO tb_users (user_name, full_name, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES ('caleb', 'Marcelo Caleb', '4f3cf84ad6d14e085071cba3d078fc1c6826cdddaff891cfa305da954eb1302a18322ed92bcbdd0e', b'1', b'1', b'1', b'1');
+
+INSERT INTO user_permission (user_id, permission_id) VALUES (1, 1);
+INSERT INTO user_permission (user_id, permission_id) VALUES	(2, 1);
+INSERT INTO user_permission (user_id, permission_id) VALUES (1, 2);
+INSERT INTO user_permission (user_id, permission_id) VALUES (3, 1);
+INSERT INTO user_permission (user_id, permission_id) VALUES (3, 2);
