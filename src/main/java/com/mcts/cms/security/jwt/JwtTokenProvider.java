@@ -26,11 +26,11 @@ import java.util.List;
 @Service
 public class JwtTokenProvider {
 
-    @Value("${spring.security.token.secret-key:secret}")
-    private String secretKey;
+    @Value("${spring.security.jwt.token.secret-key:secret}")
+    private String secretKey = "secret";
 
-    @Value("${spring.security.token.expire-length:3600000}")
-    private Long validityInMilliseconds;
+    @Value("${spring.security.jwt.token.expire-length:3600000}")
+    private long validityInMilliseconds = 3600000;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -66,10 +66,6 @@ public class JwtTokenProvider {
         return createAccessToken(username, roles);
     }
 
-    private static boolean refreshTokenContainsBearer(String refreshToken) {
-        return StringUtils.isNotBlank(refreshToken) && refreshToken.startsWith("Bearer ");
-    }
-
     private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
         String issueUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
@@ -92,13 +88,13 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        DecodedJWT decodedJWT = decodedTokenJwt(token);
+        DecodedJWT decodedJWT = decodedToken(token);
         UserDetails userDetails = this.userDetailsService
                 .loadUserByUsername(decodedJWT.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-    private DecodedJWT decodedTokenJwt(String token) {
+    private DecodedJWT decodedToken(String token) {
         Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
         JWTVerifier verifier = JWT.require(alg).build();
         DecodedJWT decodedJWT = verifier.verify(token);
@@ -107,14 +103,14 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        if(refreshTokenContainsBearer(bearerToken)) {
             return bearerToken.substring("Bearer ".length());
         }
         return null;
     }
 
     public boolean validateToken(String token) {
-        DecodedJWT decodedJWT = decodedTokenJwt(token);
+        DecodedJWT decodedJWT = decodedToken(token);
         try {
             if(decodedJWT.getExpiresAt().before(new Date())) {
                 return false;
@@ -123,6 +119,10 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             throw new InvalidJwtAuthenticationException("Expired or Invalid JWT Token");
         }
+    }
+
+    private static boolean refreshTokenContainsBearer(String refreshToken) {
+        return StringUtils.isNotBlank(refreshToken) && refreshToken.startsWith("Bearer ");
     }
 
 }

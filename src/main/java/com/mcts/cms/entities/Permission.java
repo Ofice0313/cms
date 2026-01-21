@@ -21,9 +21,6 @@ public class Permission implements GrantedAuthority {
     private Long id;
     private String description;
 
-    @OneToMany(mappedBy = "id.permission")
-    private Set<UserPermission> permissions = new HashSet<>();
-
     @Override
     public String getAuthority() {
         return this.description;

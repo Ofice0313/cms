@@ -33,9 +33,6 @@ public class User implements UserDetails {
     private Boolean credentialsNonExpired;
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "id.user")
-    private Set<UserPermission> permissions = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_permission",
         joinColumns = {@JoinColumn(name = "user_id")},

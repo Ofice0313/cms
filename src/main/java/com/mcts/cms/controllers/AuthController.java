@@ -66,4 +66,9 @@ public class AuthController {
                 StringUtils.isBlank(credentials.getPassword()) ||
                 StringUtils.isBlank(credentials.getUserName());
     }
+
+    @PostMapping(value = "/createUser")
+    public AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO credentials) {
+        return authService.create(credentials);
+    }
 }
