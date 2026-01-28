@@ -1,7 +1,7 @@
 package com.mcts.cms.controllers;
 
+import com.mcts.cms.controllers.docs.AuthControllerDocs;
 import com.mcts.cms.dto.security.AccountCredentialsDTO;
-import com.mcts.cms.dto.security.TokenDTO;
 import com.mcts.cms.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication Endpoint")
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
     
     @Autowired
     private AuthService authService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @Operation(summary = "Authenticates an user and returns a token")
     @PostMapping("/signin")
+    @Override
     public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentials) {
         logger.info("Tentativa de login para usuário: {}", credentials != null ? credentials.getUserName() : "null");
         if(credentialsIsInvalid(credentials)){
@@ -42,8 +42,8 @@ public class AuthController {
         return ResponseEntity.ok().body(token);
     }
 
-    @Operation(summary = "Refresh token for authenticated user and returns a token")
     @PutMapping("/refresh/{username}")
+    @Override
     public ResponseEntity<?> refreshToken(@PathVariable("username") String username,
                                           @RequestHeader("Authorization") String refreshToken) {
         if(parametersAreInvalid(username, refreshToken))
@@ -68,6 +68,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/createUser")
+    @Override
     public AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO credentials) {
         return authService.create(credentials);
     }
