@@ -3,11 +3,13 @@ package com.mcts.cms.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mcts.cms.entities.Client;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class ClientDTO extends RepresentationModel<ClientDTO> {
 
     private Long id;

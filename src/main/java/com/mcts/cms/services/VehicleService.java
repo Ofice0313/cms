@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -27,6 +29,13 @@ public class VehicleService {
         Page<Vehicle> list = repository.findAll(pageable);
         return list.map(x -> new VehicleDTO(x));
     }
+
+    @Transactional(readOnly = true)
+    public List<VehicleDTO> findAll() {
+        List<Vehicle> list = repository.findAll();
+        return list.stream().map(x -> new VehicleDTO(x)).collect(Collectors.toList());
+    }
+
 
     @Transactional(readOnly = true)
     public VehicleDTO findById(Long id) {

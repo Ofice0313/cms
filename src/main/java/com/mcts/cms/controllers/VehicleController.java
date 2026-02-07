@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/vehicle")
@@ -21,6 +22,12 @@ public class VehicleController {
     @GetMapping(value = "/vehicles")
     public ResponseEntity<Page<VehicleDTO>> findAllPage(Pageable pageable) {
         Page<VehicleDTO> list = service.findAllPaged(pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/vehicles-test")
+    public ResponseEntity<List<VehicleDTO>> findAll() {
+        List<VehicleDTO> list = service.findAll(); // Crie um método sem paginação
         return ResponseEntity.ok().body(list);
     }
 
