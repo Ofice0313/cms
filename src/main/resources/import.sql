@@ -37,6 +37,40 @@ INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, vehicle_id)
 INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, vehicle_id) VALUES (560000.00, '2022-05-18', 'Exportação para Paraguai. Documentação internacional.', 8, 8);
 INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, vehicle_id) VALUES (525000.00, '2021-08-30', 'Venda com garantia estendida. Revisão incluída.', 9, 9);
 INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, vehicle_id) VALUES (590000.00, '2023-03-25', 'Cliente corporativo. Frota empresarial.', 10, 10);
+
+-- Seed data para tabela tb_deposit
+-- status: PENDING=0, IN_PROGRESS=1, COMPLETED=2, OVERDUE=3, CANCELLED=4
+INSERT INTO tb_deposit (vehicle_id, client_id, initial_deposit_value, sale_value, status, deposit_date, due_date, total_installments, paid_installments, remaining_amount, observations)
+VALUES (1, 11, 100000.00, 550000.00, 0, '2024-01-10', '2024-07-10', 6, 0, 450000.00, 'Entrada inicial para compra');
+
+INSERT INTO tb_deposit (vehicle_id, client_id, initial_deposit_value, sale_value, status, deposit_date, due_date, total_installments, paid_installments, remaining_amount, observations)
+VALUES (2, 12, 80000.00, 520000.00, 0, '2024-02-05', '2024-08-05', 6, 0, 440000.00, 'Depósito com parcelas mensais');
+
+INSERT INTO tb_deposit (vehicle_id, client_id, initial_deposit_value, sale_value, status, deposit_date, due_date, total_installments, paid_installments, remaining_amount, observations)
+VALUES (3, 13, 120000.00, 580000.00, 0, '2024-03-12', '2024-09-12', 6, 0, 460000.00, 'Entrada negociada');
+
+-- Seed data para tabela tb_installment
+-- status: PENDING=0, PAID=1, OVERDUE=2, CANCELLED=3
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (1, 1, 75000.00, '2024-02-10', 0, '1ª parcela');
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (1, 2, 75000.00, '2024-03-10', 0, '2ª parcela');
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (1, 3, 75000.00, '2024-04-10', 0, '3ª parcela');
+
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (2, 1, 73333.33, '2024-03-05', 0, '1ª parcela');
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (2, 2, 73333.33, '2024-04-05', 0, '2ª parcela');
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (2, 3, 73333.33, '2024-05-05', 0, '3ª parcela');
+
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (3, 1, 76666.67, '2024-04-12', 0, '1ª parcela');
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (3, 2, 76666.67, '2024-05-12', 0, '2ª parcela');
+INSERT INTO tb_installment (deposit_id, installment_number, value_per_installment, due_date, status, observations)
+VALUES (3, 3, 76666.67, '2024-06-12', 0, '3ª parcela');
 --INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (54500.00, '2022-08-12', 'Leilão online. Arrematante presente.', 11, 1);
 --INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (53500.00, '2021-11-08', 'Troca de veículo. Diferencial financiado.', 12, 2);
 --INSERT INTO tb_sale (sale_value, sale_date, observations, client_id, order_id) VALUES (57500.00, '2023-01-15', 'Venda direta. Sem intermediários.', 13, 3);
