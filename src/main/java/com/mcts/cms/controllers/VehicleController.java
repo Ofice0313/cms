@@ -1,7 +1,6 @@
 package com.mcts.cms.controllers;
 
 import com.mcts.cms.dto.VehicleDTO;
-import com.mcts.cms.services.VehiclePagingTestService;
 import com.mcts.cms.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,18 +19,9 @@ public class VehicleController {
     @Autowired
     private VehicleService service;
 
-    @Autowired
-    private VehiclePagingTestService pagingTestService;
-
     @GetMapping(value = "/vehicles")
     public ResponseEntity<Page<VehicleDTO>> findAllPage(Pageable pageable) {
         Page<VehicleDTO> list = service.findAllPaged(pageable);
-        return ResponseEntity.ok().body(list);
-    }
-
-    @GetMapping(value = "/vehicles-paged-test")
-    public ResponseEntity<Page<VehicleDTO>> findAllPageTest(Pageable pageable) {
-        Page<VehicleDTO> list = pagingTestService.findAllPagedTest(pageable);
         return ResponseEntity.ok().body(list);
     }
 
