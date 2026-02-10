@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -37,6 +38,12 @@ public class VehicleController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @GetMapping(value = "/details/{id}")
+    public ResponseEntity<VehicleDTO> findDetails(@PathVariable Long id) {
+        VehicleDTO dto = service.findDetails(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
     @PostMapping(value = "/vehicles")
     public ResponseEntity<VehicleDTO> insert(@RequestBody VehicleDTO dto) {
         dto = service.insert(dto);
@@ -61,6 +68,21 @@ public class VehicleController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/metrics/stock-count")
+    public ResponseEntity<Long> countStockVehicles() {
+        return ResponseEntity.ok(service.countStockVehicles());
+    }
+
+    @GetMapping(value = "/metrics/sold-count")
+    public ResponseEntity<Long> countSoldVehicles() {
+        return ResponseEntity.ok(service.countSoldVehicles());
+    }
+
+    @GetMapping(value = "/metrics/total-investment")
+    public ResponseEntity<BigDecimal> totalInvestment() {
+        return ResponseEntity.ok(service.totalInvestment());
     }
 
 }

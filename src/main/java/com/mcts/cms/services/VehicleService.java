@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,6 +43,26 @@ public class VehicleService {
         Optional<Vehicle> obj = repository.findById(id);
         Vehicle entity = obj.orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
         return new VehicleDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public VehicleDTO findDetails(Long id) {
+        return findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public long countStockVehicles() {
+        return repository.countStockVehicles();
+    }
+
+    @Transactional(readOnly = true)
+    public long countSoldVehicles() {
+        return repository.countSoldVehicles();
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal totalInvestment() {
+        return repository.sumTotalInvestment();
     }
 
     @Transactional
