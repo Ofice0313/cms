@@ -3,7 +3,6 @@ package com.mcts.cms.services;
 import com.mcts.cms.dto.security.AccountCredentialsDTO;
 import com.mcts.cms.dto.security.TokenDTO;
 import com.mcts.cms.entities.User;
-import com.mcts.cms.mapper.ObjectMapper;
 import com.mcts.cms.repositories.UserRepository;
 import com.mcts.cms.security.jwt.JwtTokenProvider;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
@@ -39,28 +38,28 @@ public class AuthService {
     public ResponseEntity<TokenDTO> sigIn(AccountCredentialsDTO credentials) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        credentials.getUserName(),
+                        credentials.getEmail(),
                         credentials.getPassword()
                 )
         );
-        var user = repository.findByUserName(credentials.getUserName());
+        var user = repository.findByEmail(credentials.getEmail());
         if(user == null) {
-            throw new UsernameNotFoundException("User " +credentials.getUserName() + " not found!");
+            throw new UsernameNotFoundException("User " +credentials.getEmail() + " not found!");
         }
         var token = tokenProvider.createAccessToken(
-                credentials.getUserName(),
+                credentials.getEmail(),
                 user.getRoles()
         );
         return ResponseEntity.ok(token);
     }
 
-    public ResponseEntity<TokenDTO> refreshToken(String username, String refreshToken) {
-        var user = repository.findByUserName(username);
+    public ResponseEntity<TokenDTO> refreshToken(String email, String refreshToken) {
+        var user = repository.findByEmail(email);
         TokenDTO token;
         if(user != null) {
             token = tokenProvider.refreshToken(refreshToken);
         } else {
-            throw new UsernameNotFoundException("Username " + username + " not found!");
+            throw new UsernameNotFoundException("Email " + email+ " not found!");
         }
         return ResponseEntity.ok(token);
 
@@ -74,15 +73,24 @@ public class AuthService {
 
         var entity = new User();
         entity.setFullName(user.getFullName());
-        entity.setUserName(user.getUserName());
-        entity.setPassword(generateHashedPassword(user.getPassword()));
+        entity.setEmail(user.getEmail());
+        entity.setPhoneNumber(user.getPhoneNumber());
+        if(user.getPassword().equals(user.getConfirmationPassword())) {
+            entity.setPassword(generateHashedPassword(user.getPassword()));
+        }
         entity.setAccountNonExpired(true);
         entity.setAccountNonLocked(true);
         entity.setCredentialsNonExpired(true);
         entity.setEnabled(true);
 
         var dto = repository.save(entity);
-        return new AccountCredentialsDTO(dto.getUsername(), dto.getPassword(), dto.getFullName());
+        return new AccountCredentialsDTO(
+            dto.getFullName(),
+            dto.getEmail(),
+            dto.getPhoneNumber(),
+            dto.getPassword(),
+            user.getConfirmationPassword()
+        );
     }
 
     private String generateHashedPassword(String password) {

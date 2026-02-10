@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
@@ -68,10 +69,15 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(
+                                    "/",
+                                    "/index.html",
                                         "/auth/signin",
                                         "/auth/refresh/**",
                                         "/auth/createUser",
+                                        "/auth/createUser/**",
+                                    "/swagger-ui.html",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**"
                                 ).permitAll()

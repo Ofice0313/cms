@@ -26,7 +26,7 @@ public class AuthController implements AuthControllerDocs {
     @PostMapping("/signin")
     @Override
     public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentials) {
-        logger.info("Tentativa de login para usuário: {}", credentials != null ? credentials.getUserName() : "null");
+        logger.info("Tentativa de login para usuário: {}", credentials != null ? credentials.getEmail() : "null");
         if(credentialsIsInvalid(credentials)){
             logger.warn("Credenciais inválidas: {}", credentials);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request");
@@ -35,20 +35,20 @@ public class AuthController implements AuthControllerDocs {
         var token = authService.sigIn(credentials);
 
         if(token == null) {
-            logger.warn("Falha na autenticação para usuário: {}", credentials.getUserName());
+            logger.warn("Falha na autenticação para usuário: {}", credentials.getEmail());
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request");
         }
-        logger.info("Login bem-sucedido para usuário: {}", credentials.getUserName());
+        logger.info("Login bem-sucedido para usuário: {}", credentials.getEmail());
         return ResponseEntity.ok().body(token);
     }
 
-    @PutMapping("/refresh/{username}")
+    @PutMapping("/refresh/{email}")
     @Override
-    public ResponseEntity<?> refreshToken(@PathVariable("username") String username,
+    public ResponseEntity<?> refreshToken(@PathVariable("email") String email,
                                           @RequestHeader("Authorization") String refreshToken) {
-        if(parametersAreInvalid(username, refreshToken))
+        if(parametersAreInvalid(email, refreshToken))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request");
-        var token = authService.refreshToken(username, refreshToken);
+        var token = authService.refreshToken(email, refreshToken);
 
         if(token == null) {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request");
@@ -57,14 +57,14 @@ public class AuthController implements AuthControllerDocs {
         return ResponseEntity.ok().body(token);
     }
 
-    private boolean parametersAreInvalid(String username, String refreshToken) {
-        return StringUtils.isBlank(username) || StringUtils.isBlank(refreshToken);
+    private boolean parametersAreInvalid(String email, String refreshToken) {
+        return StringUtils.isBlank(email) || StringUtils.isBlank(refreshToken);
     }
 
     private static boolean credentialsIsInvalid(AccountCredentialsDTO credentials) {
         return credentials == null ||
                 StringUtils.isBlank(credentials.getPassword()) ||
-                StringUtils.isBlank(credentials.getUserName());
+                StringUtils.isBlank(credentials.getEmail());
     }
 
     @PostMapping(value = "/createUser")

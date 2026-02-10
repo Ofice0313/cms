@@ -43,12 +43,12 @@ public class JwtTokenProvider {
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenDTO createAccessToken(String username, List<String> roles) {
+    public TokenDTO createAccessToken(String email, List<String> roles) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-        String accessToken = getAccessToken(username, roles, now, validity);
-        String refreshToken = getRefreshToken(username, roles, now);
-        return new TokenDTO(username, true, now, validity, accessToken, refreshToken);
+        String accessToken = getAccessToken(email, roles, now, validity);
+        String refreshToken = getRefreshToken(email, roles, now);
+        return new TokenDTO(email, true, now, validity, accessToken, refreshToken);
     }
     
     public TokenDTO refreshToken(String refreshToken) {
@@ -66,24 +66,24 @@ public class JwtTokenProvider {
         return createAccessToken(username, roles);
     }
 
-    private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
+    private String getAccessToken(String email, List<String> roles, Date now, Date validity) {
         String issueUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
                 .withClaim("roles", roles)
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
-                .withSubject(username)
+                .withSubject(email)
                 .withIssuer(issueUrl)
                 .sign(algorithm);
     }
 
-    private String getRefreshToken(String username, List<String> roles, Date now) {
+    private String getRefreshToken(String email, List<String> roles, Date now) {
         Date refreshTokenValidity = new Date(now.getTime() + (validityInMilliseconds * 3));
         return JWT.create()
                 .withClaim("roles", roles)
                 .withIssuedAt(now)
                 .withExpiresAt(refreshTokenValidity)
-                .withSubject(username)
+                .withSubject(email)
                 .sign(algorithm);
     }
 

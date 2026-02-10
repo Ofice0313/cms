@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class TokenDTO {
 
-    private String userName;
+    private String email;
     private Boolean authenticated;
     private Date created;
     private Date expiration;

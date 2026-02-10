@@ -18,9 +18,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUserName(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        var user = userRepository.findByEmail(email);
         if(user != null) return user;
-        else throw new UsernameNotFoundException("username " + username + "not found!");
+        else throw new UsernameNotFoundException("email " + email + "not found!");
     }
 }
