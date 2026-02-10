@@ -64,6 +64,18 @@ public class VehicleService {
         }
     }
 
+    @Transactional
+    public VehicleDTO patch(Long id, VehicleDTO dto) {
+        try {
+            Vehicle entity = repository.getReferenceById(id);
+            copyNonNullDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new VehicleDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Resource not found!");
+        }
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if(!repository.existsById(id)) {
@@ -95,5 +107,59 @@ public class VehicleService {
         vehicle.setOrderDate(dto.getOrderDate());
         vehicle.setPurchaseValue(dto.getPurchaseValue());
         vehicle.setTravel(dto.getTravel());
+    }
+
+    private void copyNonNullDtoToEntity(VehicleDTO dto, Vehicle vehicle) {
+        if (dto.getBrand() != null) {
+            vehicle.setBrand(dto.getBrand());
+        }
+        if (dto.getModel() != null) {
+            vehicle.setModel(dto.getModel());
+        }
+        if (dto.getYear() != null) {
+            vehicle.setYear(dto.getYear());
+        }
+        if (dto.getAcquisitionDate() != null) {
+            vehicle.setAcquisitionDate(dto.getAcquisitionDate());
+        }
+        if (dto.getRegistrationDate() != null) {
+            vehicle.setRegistrationDate(dto.getRegistrationDate());
+        }
+        if (dto.getStatus() != null) {
+            vehicle.setStatus(dto.getStatus());
+        }
+        if (dto.getDriver() != null) {
+            vehicle.setDriver(dto.getDriver());
+        }
+        if (dto.getInnater() != null) {
+            vehicle.setInnater(dto.getInnater());
+        }
+        if (dto.getCp() != null) {
+            vehicle.setCp(dto.getCp());
+        }
+        if (dto.getInspection() != null) {
+            vehicle.setInspection(dto.getInspection());
+        }
+        if (dto.getLoading() != null) {
+            vehicle.setLoading(dto.getLoading());
+        }
+        if (dto.getRights() != null) {
+            vehicle.setRights(dto.getRights());
+        }
+        if (dto.getLicensePlate() != null) {
+            vehicle.setLicensePlate(dto.getLicensePlate());
+        }
+        if (dto.getCustomsBroker() != null) {
+            vehicle.setCustomsBroker(dto.getCustomsBroker());
+        }
+        if (dto.getOrderDate() != null) {
+            vehicle.setOrderDate(dto.getOrderDate());
+        }
+        if (dto.getPurchaseValue() != null) {
+            vehicle.setPurchaseValue(dto.getPurchaseValue());
+        }
+        if (dto.getTravel() != null) {
+            vehicle.setTravel(dto.getTravel());
+        }
     }
 }

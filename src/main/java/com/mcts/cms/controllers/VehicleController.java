@@ -51,6 +51,12 @@ public class VehicleController {
         return ResponseEntity.ok(dto);
     }
 
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<VehicleDTO> patch(@PathVariable Long id, @RequestBody VehicleDTO dto) {
+        dto = service.patch(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
