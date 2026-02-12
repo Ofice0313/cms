@@ -1,8 +1,10 @@
 package com.mcts.cms.controllers;
 
+import com.mcts.cms.dto.DepositSummaryDTO;
 import com.mcts.cms.dto.DepositVehicleClientDTO;
 import com.mcts.cms.dto.InstallmentDTO;
 import com.mcts.cms.dto.InstallmentPaymentDTO;
+import com.mcts.cms.entities.enuns.StatusVehicle;
 import com.mcts.cms.services.DepositServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,14 @@ public class DepositController {
     public ResponseEntity<Page<DepositVehicleClientDTO>> findAllPage(Pageable pageable) {
         Page<DepositVehicleClientDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/deposits/summary")
+    public ResponseEntity<Page<DepositSummaryDTO>> findSummaryByVehicleStatus(
+            @RequestParam(required = false) StatusVehicle vehicleStatus,
+            Pageable pageable) {
+        Page<DepositSummaryDTO> list = service.findSummaryByVehicleStatus(vehicleStatus, pageable);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping(value = "/{id}")

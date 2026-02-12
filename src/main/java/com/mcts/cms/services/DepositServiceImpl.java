@@ -1,5 +1,6 @@
 package com.mcts.cms.services;
 
+import com.mcts.cms.dto.DepositSummaryDTO;
 import com.mcts.cms.dto.DepositVehicleClientDTO;
 import com.mcts.cms.dto.InstallmentDTO;
 import com.mcts.cms.entities.*;
@@ -55,6 +56,11 @@ public class DepositServiceImpl implements DepositService {
     public Page<DepositVehicleClientDTO> findAllPaged(Pageable pageable) {
         Page<Deposit> list = repository.findAll(pageable);
         return list.map(x -> new DepositVehicleClientDTO(x));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<DepositSummaryDTO> findSummaryByVehicleStatus(StatusVehicle vehicleStatus, Pageable pageable) {
+        return repository.findDepositSummary(vehicleStatus, StatusInstallment.PAID, pageable);
     }
 
     @Transactional(readOnly = true)
