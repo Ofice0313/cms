@@ -73,6 +73,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                     "/",
                                     "/index.html",
+                                    "/error",
                                         "/auth/signin",
                                         "/auth/refresh/**",
                                         "/auth/createUser",
