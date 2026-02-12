@@ -1,5 +1,6 @@
 package com.mcts.cms.services;
 
+import com.mcts.cms.dto.SaleSummaryDTO;
 import com.mcts.cms.dto.SaleVehicleClientDTO;
 import com.mcts.cms.entities.*;
 import com.mcts.cms.entities.enuns.StatusVehicle;
@@ -47,6 +48,11 @@ public class SaleService {
     @Transactional(readOnly = true)
     public BigDecimal totalProfitForSoldVehicles() {
         return repository.sumProfitForSoldVehicles();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SaleSummaryDTO> findSaleSummary(Integer year, Integer month, Pageable pageable) {
+        return repository.findSaleSummary(year, month, pageable);
     }
 
     @Transactional

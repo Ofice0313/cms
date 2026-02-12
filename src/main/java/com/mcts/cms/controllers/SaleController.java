@@ -1,5 +1,6 @@
 package com.mcts.cms.controllers;
 
+import com.mcts.cms.dto.SaleSummaryDTO;
 import com.mcts.cms.dto.SaleVehicleClientDTO;
 import com.mcts.cms.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,15 @@ public class SaleController {
     @GetMapping(value = "/metrics/total-profit")
     public ResponseEntity<java.math.BigDecimal> totalProfitForSoldVehicles() {
         return ResponseEntity.ok(service.totalProfitForSoldVehicles());
+    }
+
+    @GetMapping(value = "/sales/summary")
+    public ResponseEntity<Page<SaleSummaryDTO>> findSaleSummary(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month,
+            Pageable pageable) {
+        Page<SaleSummaryDTO> list = service.findSaleSummary(year, month, pageable);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping(value = "/{id}")
