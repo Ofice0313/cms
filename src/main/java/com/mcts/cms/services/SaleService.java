@@ -80,11 +80,23 @@ public class SaleService {
         entity.setSaleValue(dto.getSaleValue());
         entity.setObservations(dto.getObservations());
         entity.setSaleDate(dto.getSaleDate());
+
+        if (dto.getVehicle().getId() == null || dto.getClient().getId() == null) {
+            throw new BusinessException("client_id and vehicle_id are required");
+        }
+
         Client client = clientRepository.getReferenceById(dto.getClient().getId());
         Vehicle vehicle = vehicleRepository.getReferenceById(dto.getVehicle().getId());
-        if(vehicle.getStatus() != StatusVehicle.STOCK) {
-            throw new BusinessException("The vehicle has already been SOLD");
+
+        if (vehicle.getStatus() != StatusVehicle.STOCK) {
+            boolean sameVehicle = entity.getVehicle() != null
+                    && entity.getVehicle().getId() != null
+                    && entity.getVehicle().getId().equals(vehicle.getId());
+            if (!sameVehicle) {
+                throw new BusinessException("Only vehicles with status STOCK can be sold");
+            }
         }
+
         entity.setClient(client);
         entity.setVehicle(vehicle);
         vehicle.setStatus(StatusVehicle.SOLD);
