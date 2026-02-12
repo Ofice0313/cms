@@ -1,7 +1,9 @@
 package com.mcts.cms.services;
 
 import com.mcts.cms.dto.VehicleDTO;
+import com.mcts.cms.dto.VehicleStockDTO;
 import com.mcts.cms.entities.Vehicle;
+import com.mcts.cms.entities.enuns.StatusVehicle;
 import com.mcts.cms.repositories.VehicleRepository;
 import com.mcts.cms.services.exceptions.DatabaseException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
@@ -35,6 +37,11 @@ public class VehicleService {
     public List<VehicleDTO> findAll() {
         List<Vehicle> list = repository.findAll();
         return list.stream().map(x -> new VehicleDTO(x)).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<VehicleStockDTO> findAllStockVehicles(Pageable pageable) {
+        return repository.findByStatus(StatusVehicle.STOCK, pageable);
     }
 
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -41,6 +42,11 @@ public class SaleService {
         Optional<Sale> obj = repository.findById(id);
         Sale entity = obj.orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
         return new SaleVehicleClientDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal totalProfitForSoldVehicles() {
+        return repository.sumProfitForSoldVehicles();
     }
 
     @Transactional

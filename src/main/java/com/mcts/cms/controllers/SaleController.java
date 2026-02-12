@@ -24,6 +24,11 @@ public class SaleController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping(value = "/metrics/total-profit")
+    public ResponseEntity<java.math.BigDecimal> totalProfitForSoldVehicles() {
+        return ResponseEntity.ok(service.totalProfitForSoldVehicles());
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<SaleVehicleClientDTO> findById(@PathVariable Long id) {
         SaleVehicleClientDTO dto = service.findById(id);

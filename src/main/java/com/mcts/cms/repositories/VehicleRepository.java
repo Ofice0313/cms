@@ -1,6 +1,10 @@
 package com.mcts.cms.repositories;
 
+import com.mcts.cms.dto.VehicleStockDTO;
 import com.mcts.cms.entities.Vehicle;
+import com.mcts.cms.entities.enuns.StatusVehicle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -30,4 +34,26 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 	    nativeQuery = true
     )
     BigDecimal sumTotalInvestment();
+
+	@Query(
+			"select new com.mcts.cms.dto.VehicleStockDTO("
+					+ "concat(v.brand, ' ', v.model),"
+					+ "v.year,"
+					+ "v.status,"
+					+ "(coalesce(v.purchaseValue, 0)"
+					+ " + coalesce(v.travel, 0)"
+					+ " + coalesce(v.rights, 0)"
+					+ " + coalesce(v.cp, 0)"
+					+ " + coalesce(v.innater, 0)"
+					+ " + coalesce(v.loading, 0)"
+					+ " + coalesce(v.customsBroker, 0)"
+					+ " + coalesce(v.driver, 0)"
+					+ " + coalesce(v.inspection, 0)"
+					+ " + coalesce(v.licensePlate, 0)"
+					+ ")"
+					+ ") "
+					+ "from Vehicle v "
+					+ "where v.status = :status"
+	)
+	Page<VehicleStockDTO> findByStatus(StatusVehicle status, Pageable pageable);
 }

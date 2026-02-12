@@ -1,6 +1,7 @@
 package com.mcts.cms.controllers;
 
 import com.mcts.cms.dto.VehicleDTO;
+import com.mcts.cms.dto.VehicleStockDTO;
 import com.mcts.cms.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,12 @@ public class VehicleController {
     @GetMapping(value = "/vehicles-test")
     public ResponseEntity<List<VehicleDTO>> findAll() {
         List<VehicleDTO> list = service.findAll(); // Crie um método sem paginação
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/vehicles/stock")
+    public ResponseEntity<Page<VehicleStockDTO>> findAllStockVehicles(Pageable pageable) {
+        Page<VehicleStockDTO> list = service.findAllStockVehicles(pageable);
         return ResponseEntity.ok().body(list);
     }
 
