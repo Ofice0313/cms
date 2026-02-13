@@ -1,10 +1,12 @@
 package com.mcts.cms.services;
 
 import com.mcts.cms.dto.security.AccountCredentialsDTO;
+import com.mcts.cms.dto.security.RecoverPasswordDTO;
 import com.mcts.cms.dto.security.TokenDTO;
 import com.mcts.cms.entities.User;
 import com.mcts.cms.repositories.UserRepository;
 import com.mcts.cms.security.jwt.JwtTokenProvider;
+import com.mcts.cms.services.exceptions.BusinessException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +93,26 @@ public class AuthService {
             dto.getPassword(),
             user.getConfirmationPassword()
         );
+    }
+
+    public void recoverPassword(RecoverPasswordDTO dto) {
+        if (dto == null || dto.getEmail() == null) {
+            throw new BusinessException("Email is required");
+        }
+        if (dto.getNewPassword() == null || dto.getConfirmationPassword() == null) {
+            throw new BusinessException("New password and confirmation are required");
+        }
+        if (!dto.getNewPassword().equals(dto.getConfirmationPassword())) {
+            throw new BusinessException("Password confirmation does not match");
+        }
+
+        User user = repository.findByEmail(dto.getEmail());
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        user.setPassword(generateHashedPassword(dto.getNewPassword()));
+        repository.save(user);
     }
 
     private String generateHashedPassword(String password) {

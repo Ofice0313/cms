@@ -34,8 +34,9 @@ public class DepositDomainService {
 
         List<Installment> installments = new ArrayList<>();
 
+        LocalDate baseDate = deposit.getDepositDate() != null ? deposit.getDepositDate() : LocalDate.now();
         // Data da primeira parcela: 1 mês após a data do depósito
-        LocalDate firstDueDate = deposit.getDepositDate().plusMonths(1);
+        LocalDate firstDueDate = baseDate.plusMonths(1);
 
         for (int i = 1; i <= totalInstallments; i++) {
             Installment installment = new Installment();
@@ -52,6 +53,7 @@ public class DepositDomainService {
 
             installment.setValuePerInstallment(finalValue);
             installment.setStatus(StatusInstallment.PENDING);
+            installment.setObservations(deposit.getObservations());
             installment.setDeposit(deposit);
             installments.add(installment);
         }

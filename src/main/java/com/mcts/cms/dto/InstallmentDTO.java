@@ -25,6 +25,9 @@ public class InstallmentDTO {
     @JsonProperty("payment_date")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate paymentDate;
+    @JsonProperty("due_date")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dueDate;
     private StatusInstallment status;
 
     private String observations;
@@ -33,6 +36,7 @@ public class InstallmentDTO {
         this.id = entity.getId();
         this.installmentNumber = entity.getInstallmentNumber();
         this.paymentDate = entity.getPaymentDate();
+        this.dueDate = entity.getDueDate();
         this.valuePerInstallment = entity.getValuePerInstallment();
         this.status = entity.getStatus();
         this.observations = entity.getObservations();

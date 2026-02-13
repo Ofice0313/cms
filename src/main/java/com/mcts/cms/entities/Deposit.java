@@ -70,7 +70,15 @@ public class Deposit {
     @PrePersist
     @PreUpdate
     public void calculateRemaining() {
-        this.remainingAmount = saleValue.subtract(initialDepositValue);
+        BigDecimal totalPaid = getTotalPaid();
+        if (saleValue == null) {
+            this.remainingAmount = BigDecimal.ZERO;
+        } else {
+            this.remainingAmount = saleValue.subtract(totalPaid);
+            if (this.remainingAmount.compareTo(BigDecimal.ZERO) < 0) {
+                this.remainingAmount = BigDecimal.ZERO;
+            }
+        }
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -82,7 +90,7 @@ public class Deposit {
     }
 
     public BigDecimal getTotalPaid() {
-        BigDecimal total = initialDepositValue;
+        BigDecimal total = initialDepositValue == null ? BigDecimal.ZERO : initialDepositValue;
         if (installments != null) {
             for (Installment installment : installments) {
                 if (installment.getStatus() == StatusInstallment.PAID) {

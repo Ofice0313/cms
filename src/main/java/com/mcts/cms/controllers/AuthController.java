@@ -2,6 +2,7 @@ package com.mcts.cms.controllers;
 
 import com.mcts.cms.controllers.docs.AuthControllerDocs;
 import com.mcts.cms.dto.security.AccountCredentialsDTO;
+import com.mcts.cms.dto.security.RecoverPasswordDTO;
 import com.mcts.cms.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -71,5 +72,11 @@ public class AuthController implements AuthControllerDocs {
     @Override
     public AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO credentials) {
         return authService.create(credentials);
+    }
+
+    @PostMapping(value = "/recover-password")
+    public ResponseEntity<String> recoverPassword(@RequestBody RecoverPasswordDTO request) {
+        authService.recoverPassword(request);
+        return ResponseEntity.ok("Password updated successfully");
     }
 }
