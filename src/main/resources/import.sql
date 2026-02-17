@@ -85,8 +85,8 @@ INSERT INTO tb_permission (description) VALUES ('COMMON_USER');
 --INSERT INTO tb_users (user_name, full_name, e_mail, phone_number, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES ('flavio', 'Flavio Costa', 'flavio@email.com', '877875666', '362ad02420268beeb22d3a1f0d92749df461d7f4b74c9433d7415bdeef1b2902f4eb1edaecb37cb3', b'1', b'1', b'1', b'1');
 INSERT INTO tb_users (full_name, e_mail, phone_number, password, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES ('Marcelo Caleb', 'caleb@email.com', '877875666', '4f3cf84ad6d14e085071cba3d078fc1c6826cdddaff891cfa305da954eb1302a18322ed92bcbdd0e', true, true, true, true);
 
-INSERT INTO user_permission (user_id, permission_id) VALUES (1, 1);
-INSERT INTO user_permission (user_id, permission_id) VALUES	(1, 2);
-INSERT INTO user_permission (user_id, permission_id) VALUES (1, 3);
+INSERT INTO user_permission (user_id, permission_id) VALUES (2, 1);
+INSERT INTO user_permission (user_id, permission_id) VALUES	(2, 2);
+INSERT INTO user_permission (user_id, permission_id) VALUES (2, 3);
 --INSERT INTO user_permission (user_id, permission_id) VALUES (3, 1);
 --INSERT INTO user_permission (user_id, permission_id) VALUES (3, 2);

@@ -44,6 +44,12 @@ public class ClientController {
         return ResponseEntity.ok(dto);
     }
 
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<ClientDTO> patch(@PathVariable Long id, @RequestBody ClientDTO dto) {
+        dto = service.patch(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

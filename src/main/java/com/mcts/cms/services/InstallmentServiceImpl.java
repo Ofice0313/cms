@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +78,37 @@ public class InstallmentServiceImpl implements InstallmentService {
         }
     }
 
+    @Transactional
+    public InstallmentDTO patch(Long id, InstallmentDTO dto) {
+        try {
+            Installment entity = repository.getReferenceById(id);
+
+            if (dto.getInstallmentNumber() != null) {
+                entity.setInstallmentNumber(dto.getInstallmentNumber());
+            }
+            if (dto.getStatus() != null) {
+                entity.setStatus(dto.getStatus());
+            }
+            if (dto.getPaymentDate() != null) {
+                entity.setPaymentDate(dto.getPaymentDate());
+            }
+            if (dto.getDueDate() != null) {
+                entity.setDueDate(dto.getDueDate());
+            }
+            if (dto.getValuePerInstallment() != null) {
+                entity.setValuePerInstallment(dto.getValuePerInstallment());
+            }
+            if (dto.getObservations() != null) {
+                entity.setObservations(dto.getObservations());
+            }
+
+            entity = repository.save(entity);
+            return new InstallmentDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Resource not found!");
+        }
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if(!repository.existsById(id)) {
@@ -94,7 +126,24 @@ public class InstallmentServiceImpl implements InstallmentService {
         entity.setInstallmentNumber(dto.getInstallmentNumber());
         entity.setStatus(dto.getStatus());
         entity.setPaymentDate(dto.getPaymentDate());
+        entity.setDueDate(dto.getDueDate());
         entity.setValuePerInstallment(dto.getValuePerInstallment());
+        entity.setObservations(dto.getObservations());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> notifyDueInstallments() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        List<Installment> dueInstallments = repository.findByDueDateAndStatus(today, StatusInstallment.PENDING);
+
+        return dueInstallments.stream()
+                .map(installment -> "Parcela " + installment.getInstallmentNumber()
+                        + " do depósito " + installment.getDeposit().getId()
+                        + " vence hoje (" + installment.getDueDate().format(formatter) + ").")
+                .collect(Collectors.toList());
     }
 
     @Override

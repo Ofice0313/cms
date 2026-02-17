@@ -17,6 +17,8 @@ public interface InstallmentRepository extends JpaRepository<Installment, Long> 
 
     List<Installment> findByDepositIdOrderByInstallmentNumberAsc(Long depositId);
 
+        void deleteAllByDepositId(Long depositId);
+
     // CORRIGIDO: Use o enum diretamente, não string
     @Query("SELECT i FROM Installment i WHERE i.dueDate < :today AND i.status = :status")
     List<Installment> findOverdueInstallments(
@@ -32,6 +34,8 @@ public interface InstallmentRepository extends JpaRepository<Installment, Long> 
 
     // Métodos adicionais que você pode precisar
     List<Installment> findByStatus(StatusInstallment status);
+
+        List<Installment> findByDueDateAndStatus(LocalDate dueDate, StatusInstallment status);
 
     @Query("SELECT i FROM Installment i WHERE i.dueDate BETWEEN :startDate AND :endDate")
     List<Installment> findInstallmentsByDueDateRange(

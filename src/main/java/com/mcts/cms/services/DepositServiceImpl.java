@@ -60,7 +60,15 @@ public class DepositServiceImpl implements DepositService {
 
     @Transactional(readOnly = true)
     public Page<DepositSummaryDTO> findSummaryByVehicleStatus(StatusVehicle vehicleStatus, Pageable pageable) {
-        return repository.findDepositSummary(vehicleStatus, StatusInstallment.PAID, pageable);
+        return findSummaryByVehicleStatus(vehicleStatus, StatusInstallment.PAID, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<DepositSummaryDTO> findSummaryByVehicleStatus(StatusVehicle vehicleStatus,
+                                                              StatusInstallment paidStatus,
+                                                              Pageable pageable) {
+        StatusInstallment effectiveStatus = paidStatus == null ? StatusInstallment.PAID : paidStatus;
+        return repository.findDepositSummary(vehicleStatus, effectiveStatus, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -150,19 +158,128 @@ public class DepositServiceImpl implements DepositService {
         }
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public void delete(Long id) {
-        if(!repository.existsById(id)) {
+    @Transactional
+    public DepositVehicleClientDTO patch(Long id, DepositVehicleClientDTO dto) {
+        try {
+            Deposit entity = repository.getReferenceById(id);
+
+            if (entity.getStatus() == StatusDeposit.COMPLETED ||
+                    entity.getStatus() == StatusDeposit.CANCELLED) {
+                throw new BusinessException("Cannot update a completed or cancelled deposit");
+            }
+
+            if (dto.getInitialDepositValue() != null) {
+                entity.setInitialDepositValue(dto.getInitialDepositValue());
+            }
+            if (dto.getSaleValue() != null) {
+                entity.setSaleValue(dto.getSaleValue());
+            }
+            if (dto.getStatus() != null) {
+                entity.setStatus(dto.getStatus());
+            }
+            if (dto.getDepositDate() != null) {
+                entity.setDepositDate(dto.getDepositDate());
+            }
+            if (dto.getObservations() != null) {
+                entity.setObservations(dto.getObservations());
+            }
+            if (dto.getDueDate() != null) {
+                entity.setDueDate(dto.getDueDate());
+            }
+            if (dto.getTotalInstallments() != null) {
+                entity.setTotalInstallments(dto.getTotalInstallments());
+            }
+            if (dto.getPaidInstallments() != null) {
+                entity.setPaidInstallments(dto.getPaidInstallments());
+            }
+
+            if (dto.getClient() != null && dto.getClient().getId() != null) {
+                Client client = clientRepository.findById(dto.getClient().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+                entity.setClient(client);
+            }
+
+            if (dto.getVehicle() != null && dto.getVehicle().getId() != null) {
+                Vehicle vehicle = vehicleRepository.findById(dto.getVehicle().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+
+                boolean sameVehicle = entity.getVehicle() != null
+                        && entity.getVehicle().getId() != null
+                        && entity.getVehicle().getId().equals(vehicle.getId());
+
+                if (!sameVehicle && (vehicle.getStatus() == StatusVehicle.SOLD || vehicle.getStatus() == StatusVehicle.IN_DEPOSIT)) {
+                    throw new BusinessException("The vehicle has already been SOLD or is IN_DEPOSIT");
+                }
+
+                entity.setVehicle(vehicle);
+                if (!sameVehicle) {
+                    vehicle.setStatus(StatusVehicle.IN_DEPOSIT);
+                }
+            }
+
+            if (entity.getSaleValue() == null || entity.getInitialDepositValue() == null) {
+                throw new BusinessException("Sale value and initial deposit value are required");
+            }
+
+            if (entity.getSaleValue().compareTo(entity.getInitialDepositValue()) <= 0) {
+                throw new BusinessException("Sale value must be greater than initial deposit");
+            }
+
+            entity.calculateRemaining();
+            entity.updateStatus();
+
+            entity = repository.save(entity);
+            return new DepositVehicleClientDTO(entity);
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Resource not found!");
         }
+    }
 
-        Deposit deposit = repository.findById(id).orElse(null);
-        if (deposit != null && deposit.getStatus() == StatusDeposit.IN_PROGRESS) {
+    @Transactional
+    public DepositSummaryDTO delete(Long id) {
+        Deposit deposit = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
+
+        if (deposit.getStatus() == StatusDeposit.IN_PROGRESS) {
             throw new BusinessException("Cannot delete a deposit in progress");
         }
 
+        LocalDate nextDueDate = null;
+        if (deposit.getInstallments() != null && !deposit.getInstallments().isEmpty()) {
+            nextDueDate = deposit.getInstallments().stream()
+                    .filter(installment -> installment.getStatus() == StatusInstallment.PENDING)
+                    .map(Installment::getDueDate)
+                    .filter(java.util.Objects::nonNull)
+                    .min(LocalDate::compareTo)
+                    .orElse(null);
+        }
+
+        DepositSummaryDTO summary = new DepositSummaryDTO(
+                deposit.getId(),
+                deposit.getClient() != null ? deposit.getClient().getFirstName() + " " + deposit.getClient().getLastName() : null,
+                deposit.getClient() != null ? deposit.getClient().getPhone() : null,
+                deposit.getVehicle() != null ? deposit.getVehicle().getBrand() : null,
+                deposit.getVehicle() != null ? deposit.getVehicle().getModel() : null,
+                deposit.getVehicle() != null ? deposit.getVehicle().getYear() : null,
+                deposit.getSaleValue(),
+                deposit.getRemainingAmount(),
+                deposit.getTotalInstallments(),
+                deposit.getPaidInstallments(),
+                nextDueDate,
+                deposit.getStatus()
+        );
+
         try {
-            repository.deleteById(id);
+            if (deposit.getVehicle() != null) {
+                deposit.getVehicle().setStatus(StatusVehicle.STOCK);
+                vehicleRepository.save(deposit.getVehicle());
+            }
+
+            installmentRepository.deleteAllByDepositId(id);
+            repository.delete(deposit);
+            repository.flush();
+
+            return summary;
         }
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Referential integrity failure");

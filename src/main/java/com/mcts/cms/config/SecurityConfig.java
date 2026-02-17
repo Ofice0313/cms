@@ -84,6 +84,8 @@ public class SecurityConfig {
                                         "/auth/refresh/**",
                                         "/auth/createUser",
                                         "/auth/createUser/**",
+                                        "/auth/recover-password",
+                                        "/auth/recover-password/**",
                                     "/swagger-ui.html",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**"

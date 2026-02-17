@@ -55,6 +55,12 @@ public class InstallmentController {
         return ResponseEntity.ok(dto);
     }
 
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<InstallmentDTO> patch(@PathVariable Long id, @RequestBody InstallmentDTO dto) {
+        dto = service.patch(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
@@ -94,6 +100,12 @@ public class InstallmentController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/notifications/due")
+    public ResponseEntity<List<String>> notifyDueInstallments() {
+        List<String> notifications = service.notifyDueInstallments();
+        return ResponseEntity.ok(notifications);
     }
 
 }

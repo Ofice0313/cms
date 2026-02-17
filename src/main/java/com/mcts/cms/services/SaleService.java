@@ -75,6 +75,49 @@ public class SaleService {
         }
     }
 
+    @Transactional
+    public SaleVehicleClientDTO patch(Long id, SaleVehicleClientDTO dto) {
+        try {
+            Sale entity = repository.getReferenceById(id);
+
+            if (dto.getSaleValue() != null) {
+                entity.setSaleValue(dto.getSaleValue());
+            }
+            if (dto.getSaleDate() != null) {
+                entity.setSaleDate(dto.getSaleDate());
+            }
+            if (dto.getObservations() != null) {
+                entity.setObservations(dto.getObservations());
+            }
+
+            if (dto.getClient() != null && dto.getClient().getId() != null) {
+                Client client = clientRepository.getReferenceById(dto.getClient().getId());
+                entity.setClient(client);
+            }
+
+            if (dto.getVehicle() != null && dto.getVehicle().getId() != null) {
+                Vehicle vehicle = vehicleRepository.getReferenceById(dto.getVehicle().getId());
+
+                if (vehicle.getStatus() != StatusVehicle.STOCK) {
+                    boolean sameVehicle = entity.getVehicle() != null
+                            && entity.getVehicle().getId() != null
+                            && entity.getVehicle().getId().equals(vehicle.getId());
+                    if (!sameVehicle) {
+                        throw new BusinessException("Only vehicles with status STOCK can be sold");
+                    }
+                }
+
+                entity.setVehicle(vehicle);
+                vehicle.setStatus(StatusVehicle.SOLD);
+            }
+
+            entity = repository.save(entity);
+            return new SaleVehicleClientDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Resource not found!");
+        }
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if(!repository.existsById(id)) {

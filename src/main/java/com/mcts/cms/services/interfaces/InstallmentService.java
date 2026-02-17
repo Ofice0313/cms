@@ -13,4 +13,5 @@ public interface InstallmentService {
     List<InstallmentDTO> findByDepositId(Long depositId);
     void generateInstallments(Deposit deposit);
     BigDecimal calculateInstallmentValue(BigDecimal totalAmount, Integer totalInstallments);
+    List<String> notifyDueInstallments();
 }

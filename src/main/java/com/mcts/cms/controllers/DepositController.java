@@ -4,6 +4,7 @@ import com.mcts.cms.dto.DepositSummaryDTO;
 import com.mcts.cms.dto.DepositVehicleClientDTO;
 import com.mcts.cms.dto.InstallmentDTO;
 import com.mcts.cms.dto.InstallmentPaymentDTO;
+import com.mcts.cms.entities.enuns.StatusInstallment;
 import com.mcts.cms.entities.enuns.StatusVehicle;
 import com.mcts.cms.services.DepositServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,9 @@ public class DepositController {
     @GetMapping(value = "/deposits/summary")
     public ResponseEntity<Page<DepositSummaryDTO>> findSummaryByVehicleStatus(
             @RequestParam(required = false) StatusVehicle vehicleStatus,
+            @RequestParam(required = false) StatusInstallment paidStatus,
             Pageable pageable) {
-        Page<DepositSummaryDTO> list = service.findSummaryByVehicleStatus(vehicleStatus, pageable);
+        Page<DepositSummaryDTO> list = service.findSummaryByVehicleStatus(vehicleStatus, paidStatus, pageable);
         return ResponseEntity.ok(list);
     }
 
@@ -63,10 +65,16 @@ public class DepositController {
         return ResponseEntity.ok(dto);
     }
 
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<DepositVehicleClientDTO> patch(@PathVariable Long id, @RequestBody DepositVehicleClientDTO dto) {
+        dto = service.patch(id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<DepositSummaryDTO> delete(@PathVariable Long id) {
+        DepositSummaryDTO dto = service.delete(id);
+        return ResponseEntity.ok(dto);
     }
 
     /**

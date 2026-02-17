@@ -64,6 +64,31 @@ public class ClientService {
         }
     }
 
+    @Transactional
+    public ClientDTO patch(Long id, ClientDTO dto) {
+        try {
+            Client entity = repository.getReferenceById(id);
+
+            if (dto.getFirstName() != null) {
+                entity.setFirstName(dto.getFirstName());
+            }
+            if (dto.getLastName() != null) {
+                entity.setLastName(dto.getLastName());
+            }
+            if (dto.getEmail() != null) {
+                entity.setEmail(dto.getEmail());
+            }
+            if (dto.getPhone() != null) {
+                entity.setPhone(dto.getPhone());
+            }
+
+            entity = repository.save(entity);
+            return new ClientDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Resource not found!");
+        }
+    }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if(!repository.existsById(id)) {
