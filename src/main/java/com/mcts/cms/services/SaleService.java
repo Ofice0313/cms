@@ -52,7 +52,19 @@ public class SaleService {
 
     @Transactional(readOnly = true)
     public Page<SaleSummaryDTO> findSaleSummary(Integer year, Integer month, Pageable pageable) {
-        return repository.findSaleSummary(year, month, pageable);
+        if (year != null && month != null) {
+            return repository.findSaleSummaryByYearAndMonth(year, month, pageable);
+        }
+
+        if (year != null) {
+            return repository.findSaleSummaryByYear(year, pageable);
+        }
+
+        if (month != null) {
+            return repository.findSaleSummaryByMonth(month, pageable);
+        }
+
+        return repository.findSaleSummary(pageable);
     }
 
     @Transactional
