@@ -67,7 +67,7 @@ public class Vehicle implements VehicleService {
     @PositiveOrZero(message = "O valor do innater deve ser maior ou igual a zero")
     @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
-    private BigDecimal innater;
+    private BigDecimal innater = new BigDecimal("12000.0");
 
     @PositiveOrZero(message = "O valor do carregamento deve ser maior ou igual a zero")
     @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
@@ -83,21 +83,26 @@ public class Vehicle implements VehicleService {
     @PositiveOrZero(message = "O valor do motorista deve ser maior ou igual a zero")
     @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
-    private BigDecimal driver;
+    private BigDecimal driver = new BigDecimal("2000.0");
 
     @PositiveOrZero(message = "O valor da inspeção deve ser maior ou igual a zero")
     @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
-    private BigDecimal inspection;
+    private BigDecimal inspection = new BigDecimal("800.0");
 
     @PositiveOrZero(message = "O valor da licença deve ser maior ou igual a zero")
     @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
     @Column(name = "license_plate")
-    private BigDecimal licensePlate;
+    private BigDecimal licensePlate = new BigDecimal("5000.0");
 
     @Column(name = "order_date")
     private LocalDate orderDate = LocalDate.now();
+
+    @PositiveOrZero(message = "O valor de diversos deve ser maior ou igual a zero")
+    @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
+    private BigDecimal diversos;
 
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private Sale sale;
