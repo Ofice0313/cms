@@ -59,8 +59,26 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Transactional(readOnly = true)
+    public Page<DepositVehicleClientDTO> search(String firstName, String lastName, String brand, String model, Pageable pageable) {
+        Page<Deposit> page = repository.searchByClientFirstLastBrandModelNative(firstName, lastName, brand, model, pageable);
+        return page.map(DepositVehicleClientDTO::new);
+    }
+
+    @Transactional(readOnly = true)
     public Page<DepositSummaryDTO> findSummaryByVehicleStatus(StatusVehicle vehicleStatus, Pageable pageable) {
         return findSummaryByVehicleStatus(vehicleStatus, StatusInstallment.PAID, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<DepositSummaryDTO> searchSummary(StatusVehicle vehicleStatus,
+                                                 StatusInstallment paidStatus,
+                                                 String firstName,
+                                                 String lastName,
+                                                 String brand,
+                                                 String model,
+                                                 Pageable pageable) {
+        StatusInstallment effectiveStatus = paidStatus == null ? StatusInstallment.PAID : paidStatus;
+        return repository.findDepositSummaryByFilters(vehicleStatus, effectiveStatus, firstName, lastName, brand, model, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -236,38 +254,13 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Transactional
-    public DepositSummaryDTO delete(Long id) {
+    public void delete(Long id) {
         Deposit deposit = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
 
         if (deposit.getStatus() == StatusDeposit.IN_PROGRESS) {
             throw new BusinessException("Cannot delete a deposit in progress");
         }
-
-        LocalDate nextDueDate = null;
-        if (deposit.getInstallments() != null && !deposit.getInstallments().isEmpty()) {
-            nextDueDate = deposit.getInstallments().stream()
-                    .filter(installment -> installment.getStatus() == StatusInstallment.PENDING)
-                    .map(Installment::getDueDate)
-                    .filter(java.util.Objects::nonNull)
-                    .min(LocalDate::compareTo)
-                    .orElse(null);
-        }
-
-        DepositSummaryDTO summary = new DepositSummaryDTO(
-                deposit.getId(),
-                deposit.getClient() != null ? deposit.getClient().getFirstName() + " " + deposit.getClient().getLastName() : null,
-                deposit.getClient() != null ? deposit.getClient().getPhone() : null,
-                deposit.getVehicle() != null ? deposit.getVehicle().getBrand() : null,
-                deposit.getVehicle() != null ? deposit.getVehicle().getModel() : null,
-                deposit.getVehicle() != null ? deposit.getVehicle().getYear() : null,
-                deposit.getSaleValue(),
-                deposit.getRemainingAmount(),
-                deposit.getTotalInstallments(),
-                deposit.getPaidInstallments(),
-                nextDueDate,
-                deposit.getStatus()
-        );
 
         try {
             if (deposit.getVehicle() != null) {
@@ -278,8 +271,6 @@ public class DepositServiceImpl implements DepositService {
             installmentRepository.deleteAllByDepositId(id);
             repository.delete(deposit);
             repository.flush();
-
-            return summary;
         }
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Referential integrity failure");

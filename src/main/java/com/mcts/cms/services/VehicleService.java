@@ -106,6 +106,11 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
+    public Page<VehicleStockDTO> findSoldVehicles(Pageable pageable) {
+        return repository.findByStatus(StatusVehicle.SOLD, pageable);
+    }
+
+    @Transactional(readOnly = true)
     public BigDecimal totalInvestment() {
         return repository.sumTotalInvestment();
     }

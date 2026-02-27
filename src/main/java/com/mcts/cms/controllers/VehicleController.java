@@ -113,6 +113,12 @@ public class VehicleController {
         return ResponseEntity.ok(service.countSoldVehicles());
     }
 
+    @GetMapping(value = "/metrics/sold")
+    public ResponseEntity<Page<VehicleStockDTO>> soldVehicles(Pageable pageable) {
+        Page<VehicleStockDTO> page = service.findSoldVehicles(pageable);
+        return ResponseEntity.ok(page);
+    }
+
     @GetMapping(value = "/metrics/total-investment")
     public ResponseEntity<BigDecimal> totalInvestment() {
         return ResponseEntity.ok(service.totalInvestment());

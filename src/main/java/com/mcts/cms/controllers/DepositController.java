@@ -31,6 +31,30 @@ public class DepositController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping(value = "/search")
+    public ResponseEntity<Page<DepositVehicleClientDTO>> search(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String model,
+            Pageable pageable) {
+        Page<DepositVehicleClientDTO> page = service.search(firstName, lastName, brand, model, pageable);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping(value = "/search/summary")
+    public ResponseEntity<Page<DepositSummaryDTO>> searchSummary(
+            @RequestParam(required = false) StatusVehicle vehicleStatus,
+            @RequestParam(required = false) StatusInstallment paidStatus,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String model,
+            Pageable pageable) {
+        Page<DepositSummaryDTO> page = service.searchSummary(vehicleStatus, paidStatus, firstName, lastName, brand, model, pageable);
+        return ResponseEntity.ok(page);
+    }
+
     @GetMapping(value = "/deposits/summary")
     public ResponseEntity<Page<DepositSummaryDTO>> findSummaryByVehicleStatus(
             @RequestParam(required = false) StatusVehicle vehicleStatus,
@@ -72,9 +96,9 @@ public class DepositController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<DepositSummaryDTO> delete(@PathVariable Long id) {
-        DepositSummaryDTO dto = service.delete(id);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     /**
