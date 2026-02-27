@@ -2,6 +2,7 @@ package com.mcts.cms.controllers;
 
 import com.mcts.cms.dto.VehicleDTO;
 import com.mcts.cms.dto.VehicleStockDTO;
+import com.mcts.cms.entities.enuns.Step;
 import com.mcts.cms.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,23 @@ public class VehicleController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping(value = "/vehicles/search")
+    public ResponseEntity<Page<VehicleDTO>> searchByBrandOrModel(
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "model", required = false) String model,
+            Pageable pageable) {
+        Page<VehicleDTO> list = service.searchByBrandOrModel(brand, model, pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/vehicles/search/step")
+    public ResponseEntity<Page<VehicleDTO>> searchByStep(
+            @RequestParam("step") Step step,
+            Pageable pageable) {
+        Page<VehicleDTO> list = service.searchByStep(step, pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
     @GetMapping(value = "/vehicles-test")
     public ResponseEntity<List<VehicleDTO>> findAll() {
         List<VehicleDTO> list = service.findAll(); // Crie um método sem paginação
@@ -36,6 +54,14 @@ public class VehicleController {
     @GetMapping(value = "/vehicles/stock")
     public ResponseEntity<Page<VehicleStockDTO>> findAllStockVehicles(Pageable pageable) {
         Page<VehicleStockDTO> list = service.findAllStockVehicles(pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/vehicles/stock/step")
+    public ResponseEntity<Page<VehicleStockDTO>> findAllVehiclesByStep(
+            @RequestParam("step") Step step,
+            Pageable pageable) {
+        Page<VehicleStockDTO> list = service.findAllVehiclesByStep(step, pageable);
         return ResponseEntity.ok().body(list);
     }
 

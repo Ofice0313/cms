@@ -2,6 +2,7 @@ package com.mcts.cms.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mcts.cms.entities.enuns.StatusVehicle;
+import com.mcts.cms.entities.enuns.Step;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class VehicleStockDTO {
     private Integer manufacturedYear;
 
     private StatusVehicle status;
+
+    private Step step;
 
     private BigDecimal investment;
 }

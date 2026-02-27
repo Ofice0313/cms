@@ -90,3 +90,75 @@ INSERT INTO user_permission (user_id, permission_id) VALUES	(2, 2);
 INSERT INTO user_permission (user_id, permission_id) VALUES (2, 3);
 --INSERT INTO user_permission (user_id, permission_id) VALUES (3, 1);
 --INSERT INTO user_permission (user_id, permission_id) VALUES (3, 2);
+
+---- =============================================
+---- Seed opcional de cotações (tb_cotacao)
+---- Só insere se existir cliente (e veículo em STOCK, quando aplicável)
+---- =============================================
+--
+--INSERT INTO tb_cotacao (
+--	codigo, status, fase, marca, modelo, ano,
+--	compra, viagem, direitos, cp, carregamento, inater, despachante, motorista, inspecao, chapas,
+--	total_aquisicao, total_despacho, investimento_total, valor_venda, lucro_estimado,
+--	observacoes, vehicle_id_origem, created_at, updated_at, client_id
+--)
+--SELECT
+--	'COT-SEED-MANUAL-001', 'GENERATED', 'NAMAACHA', 'Toyota', 'Corolla', 2021,
+--	850000.00, 250000.00, 150000.00, 85000.00, 35000.00, 120000.00, 45000.00, 20000.00, 8000.00, 50000.00,
+--	1100000.00, 513000.00, 1613000.00, 1850000.00, 237000.00,
+--	'Cotação seed manual para testes', NULL, NOW(), NOW(), c.id
+--FROM tb_client c
+--ORDER BY c.id
+--LIMIT 1;
+--
+--INSERT INTO tb_cotacao (
+--	codigo, status, fase, marca, modelo, ano,
+--	compra, viagem, direitos, cp, carregamento, inater, despachante, motorista, inspecao, chapas,
+--	total_aquisicao, total_despacho, investimento_total, valor_venda, lucro_estimado,
+--	observacoes, vehicle_id_origem, created_at, updated_at, client_id
+--)
+--SELECT
+--	'COT-SEED-VEHICLE-001', 'GENERATED', 'DURBAN_SA',
+--	v.brand, v.model, v.manufactured_year,
+--	COALESCE(v.purchase_value, 0), COALESCE(v.travel, 0), COALESCE(v.rights, 0), COALESCE(v.cp, 0),
+--	COALESCE(v.loading, 0), COALESCE(v.innater, 0), COALESCE(v.customs_broker, 0), COALESCE(v.driver, 0),
+--	COALESCE(v.inspection, 0), COALESCE(v.license_plate, 0),
+--	(COALESCE(v.purchase_value, 0) + COALESCE(v.travel, 0)),
+--	(COALESCE(v.rights, 0) + COALESCE(v.cp, 0) + COALESCE(v.loading, 0) + COALESCE(v.innater, 0)
+--		+ COALESCE(v.customs_broker, 0) + COALESCE(v.driver, 0) + COALESCE(v.inspection, 0) + COALESCE(v.license_plate, 0)),
+--	(
+--		(COALESCE(v.purchase_value, 0) + COALESCE(v.travel, 0))
+--		+
+--		(COALESCE(v.rights, 0) + COALESCE(v.cp, 0) + COALESCE(v.loading, 0) + COALESCE(v.innater, 0)
+--			+ COALESCE(v.customs_broker, 0) + COALESCE(v.driver, 0) + COALESCE(v.inspection, 0) + COALESCE(v.license_plate, 0))
+--	),
+--	(
+--		(
+--			(COALESCE(v.purchase_value, 0) + COALESCE(v.travel, 0))
+--			+
+--			(COALESCE(v.rights, 0) + COALESCE(v.cp, 0) + COALESCE(v.loading, 0) + COALESCE(v.innater, 0)
+--				+ COALESCE(v.customs_broker, 0) + COALESCE(v.driver, 0) + COALESCE(v.inspection, 0) + COALESCE(v.license_plate, 0))
+--		) * 1.15
+--	),
+--	(
+--		(
+--			(
+--				(COALESCE(v.purchase_value, 0) + COALESCE(v.travel, 0))
+--				+
+--				(COALESCE(v.rights, 0) + COALESCE(v.cp, 0) + COALESCE(v.loading, 0) + COALESCE(v.innater, 0)
+--					+ COALESCE(v.customs_broker, 0) + COALESCE(v.driver, 0) + COALESCE(v.inspection, 0) + COALESCE(v.license_plate, 0))
+--			) * 1.15
+--		)
+--		-
+--		(
+--			(COALESCE(v.purchase_value, 0) + COALESCE(v.travel, 0))
+--			+
+--			(COALESCE(v.rights, 0) + COALESCE(v.cp, 0) + COALESCE(v.loading, 0) + COALESCE(v.innater, 0)
+--				+ COALESCE(v.customs_broker, 0) + COALESCE(v.driver, 0) + COALESCE(v.inspection, 0) + COALESCE(v.license_plate, 0))
+--		)
+--	),
+--	'Cotação seed a partir de veículo em estoque', v.id, NOW(), NOW(), c.id
+--FROM tb_client c
+--JOIN tb_vehicle v ON v.status = 0
+--ORDER BY c.id, v.id
+--LIMIT 1;

@@ -16,12 +16,12 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "tb_vehicle")
-public class Vehicle implements VehicleService {
+@Table(name = "tb_quotation")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Quotation implements VehicleService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,10 +41,6 @@ public class Vehicle implements VehicleService {
     @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(name = "registration_date", updatable = false)
     private LocalDate registrationDate = LocalDate.now();
-
-    private StatusVehicle status;
-
-    private Step step;
 
     @PositiveOrZero(message = "O valor de compra deve ser maior ou igual a zero")
     @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
@@ -117,18 +113,20 @@ public class Vehicle implements VehicleService {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
     private BigDecimal diversos;
 
-    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    private Sale sale;
-
     private String observations;
+
+    private Step step;
+
+    private BigDecimal saleValue;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @PrePersist
     protected void onCreate() {
         if (registrationDate == null) {
             registrationDate = LocalDate.now();
-        }
-        if(status == null) {
-            status = StatusVehicle.STOCK;
         }
         if(step == null) {
             step = Step.DURBAN_SA;
@@ -156,7 +154,13 @@ public class Vehicle implements VehicleService {
 
     @Override
     public BigDecimal getTotalInvestment() {
-        return Stream.of(getSubTotalAcquisition(), getSubTotalOrder())
+        return Stream.of(purchaseValue, getValueTravel(), getSubTotalOrder())
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getValueSale() {
+        return Stream.of(saleValue,getTotalInvestment())
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

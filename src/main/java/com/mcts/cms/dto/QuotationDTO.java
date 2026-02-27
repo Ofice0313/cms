@@ -2,12 +2,11 @@ package com.mcts.cms.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mcts.cms.entities.Quotation;
 import com.mcts.cms.entities.Vehicle;
 import com.mcts.cms.entities.enuns.StatusVehicle;
 import com.mcts.cms.entities.enuns.Step;
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleDTO {
+public class QuotationDTO {
 
     private Long id;
 
@@ -37,17 +36,17 @@ public class VehicleDTO {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate registrationDate;
 
-    private StatusVehicle status;
+    private Step step;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
     @JsonProperty("purchase_value")
     private BigDecimal purchaseValue;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
-    private BigDecimal hotel;
+    private BigDecimal food;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
-    private BigDecimal food;
+    private BigDecimal hotel;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
     private BigDecimal fuel;
@@ -87,20 +86,25 @@ public class VehicleDTO {
 
     private BigDecimal investment;
 
-    private Step step;
+    private BigDecimal travel;
+
+    @JsonProperty("sale_value")
+    private BigDecimal saleValue;
 
     private BigDecimal diversos;
 
     private String observations;
 
-    public VehicleDTO(Vehicle entity) {
+    @JsonProperty("client_id")
+    private ClientDTO client;
+
+    public QuotationDTO(Quotation entity) {
         this.id = entity.getId();
         this.brand = entity.getBrand();
         this.model = entity.getModel();
         this.year = entity.getYear();
         this.acquisitionDate = entity.getAcquisitionDate();
         this.registrationDate = entity.getRegistrationDate();
-        this.status = entity.getStatus();
         this.step = entity.getStep();
         this.cp = entity.getCp();
         this.purchaseValue = entity.getPurchaseValue();
@@ -114,11 +118,14 @@ public class VehicleDTO {
         this.customsBroker = entity.getCustomsBroker();
         this.inspection = entity.getInspection();
         this.licensePlate = entity.getLicensePlate();
-        this.diversos = entity.getDiversos();
-        this.observations = entity.getObservations();
         this.acquisition = entity.getSubTotalAcquisition();
         this.order = entity.getSubTotalOrder();
         this.investment = entity.getTotalInvestment();
+        this.travel =entity.getValueTravel();
+        this.saleValue = entity.getSaleValue();
+        this.diversos = entity.getDiversos();
+        this.observations = entity.getObservations();
+        this.client = new ClientDTO(entity.getClient());
     }
 
 }

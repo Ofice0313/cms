@@ -2,6 +2,7 @@ package com.mcts.cms.repositories;
 
 import com.mcts.cms.dto.SaleSummaryDTO;
 import com.mcts.cms.entities.Sale;
+import com.mcts.cms.entities.enuns.Step;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +22,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 			+ "concat(c.firstName, ' ', c.lastName),"
 			+ "s.saleDate,"
 			+ "(coalesce(v.purchaseValue, 0)"
-			+ " + coalesce(v.travel, 0)"
+			+ " + coalesce(v.hotel, 0)"
+			+ " + coalesce(v.food, 0)"
+			+ " + coalesce(v.fuel, 0)"
 			+ " + coalesce(v.rights, 0)"
 			+ " + coalesce(v.cp, 0)"
 			+ " + coalesce(v.innater, 0)"
@@ -34,7 +37,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 			+ "s.saleValue,"
 			+ "(coalesce(s.saleValue, 0) - ("
 			+ "coalesce(v.purchaseValue, 0)"
-			+ " + coalesce(v.travel, 0)"
+			+ " + coalesce(v.hotel, 0)"
+			+ " + coalesce(v.food, 0)"
+			+ " + coalesce(v.fuel, 0)"
 			+ " + coalesce(v.rights, 0)"
 			+ " + coalesce(v.cp, 0)"
 			+ " + coalesce(v.innater, 0)"
@@ -49,7 +54,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 			+ " when s.saleValue is null or s.saleValue = 0 then 0 "
 			+ " else ((coalesce(s.saleValue, 0) - ("
 			+ "coalesce(v.purchaseValue, 0)"
-			+ " + coalesce(v.travel, 0)"
+			+ " + coalesce(v.hotel, 0)"
+			+ " + coalesce(v.food, 0)"
+			+ " + coalesce(v.fuel, 0)"
 			+ " + coalesce(v.rights, 0)"
 			+ " + coalesce(v.cp, 0)"
 			+ " + coalesce(v.innater, 0)"
@@ -69,7 +76,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 	    value = "select coalesce(sum("
 		    + "coalesce(s.sale_value, 0) - ("
 		    + "coalesce(v.purchase_value, 0)"
-		    + " + coalesce(v.travel, 0)"
+		    + " + coalesce(v.hotel, 0)"
+		    + " + coalesce(v.food, 0)"
+		    + " + coalesce(v.fuel, 0)"
 		    + " + coalesce(v.rights, 0)"
 		    + " + coalesce(v.cp, 0)"
 		    + " + coalesce(v.innater, 0)"
@@ -96,6 +105,18 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 	@Query(SALE_SUMMARY_SELECT + "where month(s.saleDate) = :month")
 	Page<SaleSummaryDTO> findSaleSummaryByMonth(@Param("month") Integer month, Pageable pageable);
 
+	@Query(SALE_SUMMARY_SELECT + "where v.step = :step")
+	Page<SaleSummaryDTO> findSaleSummaryByStep(@Param("step") Step step, Pageable pageable);
+
+	@Query(SALE_SUMMARY_SELECT + "where year(s.saleDate) = :year and v.step = :step")
+	Page<SaleSummaryDTO> findSaleSummaryByYearAndStep(@Param("year") Integer year, @Param("step") Step step, Pageable pageable);
+
+	@Query(SALE_SUMMARY_SELECT + "where month(s.saleDate) = :month and v.step = :step")
+	Page<SaleSummaryDTO> findSaleSummaryByMonthAndStep(@Param("month") Integer month, @Param("step") Step step, Pageable pageable);
+
 	@Query(SALE_SUMMARY_SELECT + "where year(s.saleDate) = :year and month(s.saleDate) = :month")
 	Page<SaleSummaryDTO> findSaleSummaryByYearAndMonth(@Param("year") Integer year, @Param("month") Integer month, Pageable pageable);
+
+	@Query(SALE_SUMMARY_SELECT + "where year(s.saleDate) = :year and month(s.saleDate) = :month and v.step = :step")
+	Page<SaleSummaryDTO> findSaleSummaryByYearAndMonthAndStep(@Param("year") Integer year, @Param("month") Integer month, @Param("step") Step step, Pageable pageable);
 }

@@ -4,6 +4,7 @@ import com.mcts.cms.entities.Deposit;
 import com.mcts.cms.entities.Installment;
 import com.mcts.cms.entities.enuns.StatusInstallment;
 import com.mcts.cms.services.exceptions.BusinessException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +15,9 @@ import java.util.List;
 
 @Service
 public class DepositDomainService {
+
+    @Value("${installment.due.interval-days:5}")
+    private Integer installmentIntervalDays;
 
     public List<Installment> calculateInstallments(Deposit deposit) {
         validateInstallmentGeneration(deposit);
@@ -35,15 +39,16 @@ public class DepositDomainService {
         List<Installment> installments = new ArrayList<>();
 
         LocalDate baseDate = deposit.getDepositDate() != null ? deposit.getDepositDate() : LocalDate.now();
-        // Data da primeira parcela: 1 mês após a data do depósito
-        LocalDate firstDueDate = baseDate.plusMonths(1);
+        long intervalDays = resolveIntervalDays();
+        // Data da primeira parcela: intervalo configurado após a data do depósito
+        LocalDate firstDueDate = baseDate.plusDays(intervalDays);
 
         for (int i = 1; i <= totalInstallments; i++) {
             Installment installment = new Installment();
             installment.setInstallmentNumber(i);
 
-            // Calcula data de vencimento: primeira parcela + (i-1) meses
-            installment.setDueDate(firstDueDate.plusMonths(i - 1));
+            // Calcula data de vencimento: primeira parcela + (i-1) * intervalo configurado
+            installment.setDueDate(firstDueDate.plusDays((long) (i - 1) * intervalDays));
 
             // Ajusta última parcela se houver diferença de arredondamento
             BigDecimal finalValue = installmentValue;
@@ -73,5 +78,12 @@ public class DepositDomainService {
         if (deposit.getRemainingAmount() == null || deposit.getRemainingAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException("No remaining amount to generate installments");
         }
+    }
+
+    private long resolveIntervalDays() {
+        if (installmentIntervalDays == null || installmentIntervalDays <= 0) {
+            return 5L;
+        }
+        return installmentIntervalDays.longValue();
     }
 }

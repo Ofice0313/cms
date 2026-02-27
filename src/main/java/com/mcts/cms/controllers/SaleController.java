@@ -2,6 +2,7 @@ package com.mcts.cms.controllers;
 
 import com.mcts.cms.dto.SaleSummaryDTO;
 import com.mcts.cms.dto.SaleVehicleClientDTO;
+import com.mcts.cms.entities.enuns.Step;
 import com.mcts.cms.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,8 +35,9 @@ public class SaleController {
     public ResponseEntity<Page<SaleSummaryDTO>> findSaleSummary(
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
+            @RequestParam(required = false) Step step,
             Pageable pageable) {
-        Page<SaleSummaryDTO> list = service.findSaleSummary(year, month, pageable);
+        Page<SaleSummaryDTO> list = service.findSaleSummary(year, month, step, pageable);
         return ResponseEntity.ok(list);
     }
 

@@ -4,6 +4,7 @@ import com.mcts.cms.dto.SaleSummaryDTO;
 import com.mcts.cms.dto.SaleVehicleClientDTO;
 import com.mcts.cms.entities.*;
 import com.mcts.cms.entities.enuns.StatusVehicle;
+import com.mcts.cms.entities.enuns.Step;
 import com.mcts.cms.repositories.*;
 import com.mcts.cms.services.exceptions.BusinessException;
 import com.mcts.cms.services.exceptions.DatabaseException;
@@ -51,17 +52,33 @@ public class SaleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SaleSummaryDTO> findSaleSummary(Integer year, Integer month, Pageable pageable) {
+    public Page<SaleSummaryDTO> findSaleSummary(Integer year, Integer month, Step step, Pageable pageable) {
+        if (year != null && month != null && step != null) {
+            return repository.findSaleSummaryByYearAndMonthAndStep(year, month, step, pageable);
+        }
+
         if (year != null && month != null) {
             return repository.findSaleSummaryByYearAndMonth(year, month, pageable);
+        }
+
+        if (year != null && step != null) {
+            return repository.findSaleSummaryByYearAndStep(year, step, pageable);
         }
 
         if (year != null) {
             return repository.findSaleSummaryByYear(year, pageable);
         }
 
+        if (month != null && step != null) {
+            return repository.findSaleSummaryByMonthAndStep(month, step, pageable);
+        }
+
         if (month != null) {
             return repository.findSaleSummaryByMonth(month, pageable);
+        }
+
+        if (step != null) {
+            return repository.findSaleSummaryByStep(step, pageable);
         }
 
         return repository.findSaleSummary(pageable);

@@ -7,4 +7,5 @@ public interface VehicleService {
     BigDecimal getTotalInvestment();
     BigDecimal getSubTotalAcquisition();
     BigDecimal getSubTotalOrder();
+    BigDecimal getValueTravel();
 }

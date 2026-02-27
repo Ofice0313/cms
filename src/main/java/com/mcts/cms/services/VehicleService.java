@@ -4,6 +4,7 @@ import com.mcts.cms.dto.VehicleDTO;
 import com.mcts.cms.dto.VehicleStockDTO;
 import com.mcts.cms.entities.Vehicle;
 import com.mcts.cms.entities.enuns.StatusVehicle;
+import com.mcts.cms.entities.enuns.Step;
 import com.mcts.cms.repositories.VehicleRepository;
 import com.mcts.cms.services.exceptions.DatabaseException;
 import com.mcts.cms.services.exceptions.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,37 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
+    public Page<VehicleDTO> searchByBrandOrModel(String brand, String model, Pageable pageable) {
+        String normalizedBrand = normalizeFilter(brand);
+        String normalizedModel = normalizeFilter(model);
+
+        Specification<Vehicle> specification = Specification.where(null);
+
+        if (normalizedBrand != null) {
+            specification = specification.and((root, query, cb) -> cb.like(
+                    cb.lower(root.get("brand")),
+                    "%" + normalizedBrand.toLowerCase() + "%"
+            ));
+        }
+
+        if (normalizedModel != null) {
+            specification = specification.and((root, query, cb) -> cb.like(
+                    cb.lower(root.get("model")),
+                    "%" + normalizedModel.toLowerCase() + "%"
+            ));
+        }
+
+        Page<Vehicle> list = repository.findAll(specification, pageable);
+        return list.map(VehicleDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<VehicleDTO> searchByStep(Step step, Pageable pageable) {
+        Page<Vehicle> list = repository.findByStep(step, pageable);
+        return list.map(VehicleDTO::new);
+    }
+
+    @Transactional(readOnly = true)
     public List<VehicleDTO> findAll() {
         List<Vehicle> list = repository.findAll();
         return list.stream().map(x -> new VehicleDTO(x)).collect(Collectors.toList());
@@ -42,6 +75,11 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public Page<VehicleStockDTO> findAllStockVehicles(Pageable pageable) {
         return repository.findByStatus(StatusVehicle.STOCK, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<VehicleStockDTO> findAllVehiclesByStep(Step step, Pageable pageable) {
+        return repository.findByStepSummary(step, pageable);
     }
 
 
@@ -134,7 +172,19 @@ public class VehicleService {
         vehicle.setCustomsBroker(dto.getCustomsBroker());
         vehicle.setOrderDate(dto.getOrderDate());
         vehicle.setPurchaseValue(dto.getPurchaseValue());
-        vehicle.setTravel(dto.getTravel());
+        vehicle.setHotel(dto.getHotel());
+        vehicle.setFood(dto.getFood());
+        vehicle.setFuel(dto.getFuel());
+        vehicle.setStep(dto.getStep());
+        vehicle.setDiversos(dto.getDiversos());
+        vehicle.setObservations(dto.getObservations());
+    }
+
+    private String normalizeFilter(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        return value.trim();
     }
 
     private void copyNonNullDtoToEntity(VehicleDTO dto, Vehicle vehicle) {
@@ -186,8 +236,23 @@ public class VehicleService {
         if (dto.getPurchaseValue() != null) {
             vehicle.setPurchaseValue(dto.getPurchaseValue());
         }
-        if (dto.getTravel() != null) {
-            vehicle.setTravel(dto.getTravel());
+        if (dto.getHotel() != null) {
+            vehicle.setHotel(dto.getHotel());
+        }
+        if (dto.getFood() != null) {
+            vehicle.setFood(dto.getFood());
+        }
+        if (dto.getFuel() != null) {
+            vehicle.setFuel(dto.getFuel());
+        }
+        if (dto.getStep() != null) {
+            vehicle.setStep(dto.getStep());
+        }
+        if (dto.getDiversos() != null) {
+            vehicle.setDiversos(dto.getDiversos());
+        }
+        if (dto.getObservations() != null) {
+            vehicle.setObservations(dto.getObservations());
         }
     }
 }
