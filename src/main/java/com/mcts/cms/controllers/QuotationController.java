@@ -48,6 +48,7 @@ public class QuotationController {
         return ResponseEntity.ok().body(dto);
     }
 
+    // Detalhes da cotação, incluindo informações do cliente e do veículo
     @GetMapping(value = "/details/{id}")
     public ResponseEntity<QuotationDTO> findDetails(@PathVariable Long id) {
         QuotationDTO dto = service.findDetails(id);
