@@ -115,6 +115,11 @@ public class VehicleService {
         return repository.sumTotalInvestment();
     }
 
+    @Transactional(readOnly = true)
+    public BigDecimal totalInvestmentByStatus(StatusVehicle status) {
+        return repository.sumTotalInvestmentByStatus(status);
+    }
+
     @Transactional
     public VehicleDTO insert(VehicleDTO  dto) {
         Vehicle vehicle = new Vehicle();

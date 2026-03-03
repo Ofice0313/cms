@@ -41,6 +41,24 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     )
     BigDecimal sumTotalInvestment();
 
+	    @Query(
+		    "select coalesce(sum("
+			    + "coalesce(v.purchaseValue, 0)"
+			    + " + coalesce(v.hotel, 0)"
+			    + " + coalesce(v.food, 0)"
+			    + " + coalesce(v.fuel, 0)"
+			    + " + coalesce(v.rights, 0)"
+			    + " + coalesce(v.cp, 0)"
+			    + " + coalesce(v.innater, 0)"
+			    + " + coalesce(v.loading, 0)"
+			    + " + coalesce(v.customsBroker, 0)"
+			    + " + coalesce(v.driver, 0)"
+			    + " + coalesce(v.inspection, 0)"
+			    + " + coalesce(v.licensePlate, 0)"
+			    + "), 0) from Vehicle v where v.status = :status"
+	    )
+	    BigDecimal sumTotalInvestmentByStatus(com.mcts.cms.entities.enuns.StatusVehicle status);
+
 	@Query(
 			"select new com.mcts.cms.dto.VehicleStockDTO("
 					+ "concat(v.brand, ' ', v.model),"

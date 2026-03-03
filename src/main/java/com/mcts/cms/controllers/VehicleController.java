@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
+import com.mcts.cms.entities.enuns.StatusVehicle;
 
 @RestController
 @RequestMapping(value = "/api/vehicle")
@@ -122,6 +123,11 @@ public class VehicleController {
     @GetMapping(value = "/metrics/total-investment")
     public ResponseEntity<BigDecimal> totalInvestment() {
         return ResponseEntity.ok(service.totalInvestment());
+    }
+
+    @GetMapping(value = "/metrics/total-investment/sold")
+    public ResponseEntity<BigDecimal> totalInvestmentSold() {
+        return ResponseEntity.ok(service.totalInvestmentByStatus(StatusVehicle.SOLD));
     }
 
 }
