@@ -2,6 +2,8 @@ package com.mcts.cms.services;
 
 import com.mcts.cms.controllers.ClientController;
 import com.mcts.cms.dto.ClientDTO;
+import com.mcts.cms.dto.ClientSalesVehiclesDTO;
+import com.mcts.cms.dto.ClientSummaryDTO;
 import com.mcts.cms.entities.Client;
 import com.mcts.cms.mapper.ObjectMapper;
 import com.mcts.cms.repositories.ClientRepository;
@@ -34,6 +36,11 @@ public class ClientService {
     }
 
     @Transactional(readOnly = true)
+    public Page<ClientSummaryDTO> findClientSummary(Pageable pageable) {
+        return repository.findClientSummary(pageable);
+    }
+
+    @Transactional(readOnly = true)
     public ClientDTO findById(Long id) {
         Optional<Client> obj = repository.findById(id);
         Client entity = obj.orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
@@ -42,6 +49,13 @@ public class ClientService {
         var dto = ObjectMapper.parseObject(client, ClientDTO.class);
         addHateoasLinks(dto);
         return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public ClientSalesVehiclesDTO findByIdWithSalesAndVehicles(Long id) {
+        Client entity = repository.findByIdWithSalesAndVehicles(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found!"));
+        return new ClientSalesVehiclesDTO(entity);
     }
 
     @Transactional

@@ -112,11 +112,6 @@ public class Vehicle implements VehicleService {
     @Column(name = "order_date")
     private LocalDate orderDate = LocalDate.now();
 
-    @PositiveOrZero(message = "O valor de diversos deve ser maior ou igual a zero")
-    @Digits(integer = 10, fraction = 2, message = "O valor deve ter no máximo 2 casas decimais")
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER, pattern = "#0.00")
-    private BigDecimal diversos;
-
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private Sale sale;
 

@@ -1,6 +1,8 @@
 package com.mcts.cms.controllers;
 
 import com.mcts.cms.dto.ClientDTO;
+import com.mcts.cms.dto.ClientSalesVehiclesDTO;
+import com.mcts.cms.dto.ClientSummaryDTO;
 import com.mcts.cms.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +26,21 @@ public class ClientController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping(value = "/clients/summary")
+    public ResponseEntity<Page<ClientSummaryDTO>> findClientSummary(Pageable pageable) {
+        Page<ClientSummaryDTO> list = service.findClientSummary(pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
         ClientDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping(value = "/{id}/sales")
+    public ResponseEntity<ClientSalesVehiclesDTO> findByIdWithSalesAndVehicles(@PathVariable Long id) {
+        ClientSalesVehiclesDTO dto = service.findByIdWithSalesAndVehicles(id);
         return ResponseEntity.ok().body(dto);
     }
 

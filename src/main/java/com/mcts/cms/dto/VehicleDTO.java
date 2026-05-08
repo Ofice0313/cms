@@ -89,8 +89,6 @@ public class VehicleDTO {
 
     private Step step;
 
-    private BigDecimal diversos;
-
     private String observations;
 
     public VehicleDTO(Vehicle entity) {
@@ -114,7 +112,6 @@ public class VehicleDTO {
         this.customsBroker = entity.getCustomsBroker();
         this.inspection = entity.getInspection();
         this.licensePlate = entity.getLicensePlate();
-        this.diversos = entity.getDiversos();
         this.observations = entity.getObservations();
         this.acquisition = entity.getSubTotalAcquisition();
         this.order = entity.getSubTotalOrder();

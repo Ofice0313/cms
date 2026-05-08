@@ -22,6 +22,11 @@ public class SaleDTO {
     private LocalDate saleDate;
     private String observations;
 
+    private BigDecimal diversos;
+
+    @JsonProperty("sale_value_with_diversos")
+    private BigDecimal saleValueWithDiversos;
+
     private BigDecimal profit;
 
     private Long vehicle;
@@ -33,6 +38,8 @@ public class SaleDTO {
         this.saleDate = entity.getSaleDate();
         this.observations = entity.getObservations();
         this.saleValue = entity.getSaleValue();
+        this.diversos = entity.getDiversos();
+        this.saleValueWithDiversos = entity.getSaleValueWithDiversos();
         this.profit = entity.getProfit();
         this.client = entity.getClient().getId();
     }

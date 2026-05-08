@@ -118,6 +118,9 @@ public class SaleService {
             if (dto.getObservations() != null) {
                 entity.setObservations(dto.getObservations());
             }
+            if (dto.getDiversos() != null) {
+                entity.setDiversos(dto.getDiversos());
+            }
 
             if (dto.getClient() != null && dto.getClient().getId() != null) {
                 Client client = clientRepository.getReferenceById(dto.getClient().getId());
@@ -164,6 +167,7 @@ public class SaleService {
         entity.setSaleValue(dto.getSaleValue());
         entity.setObservations(dto.getObservations());
         entity.setSaleDate(dto.getSaleDate());
+        entity.setDiversos(dto.getDiversos());
 
         if (dto.getVehicle().getId() == null || dto.getClient().getId() == null) {
             throw new BusinessException("client_id and vehicle_id are required");

@@ -186,7 +186,6 @@ public class VehicleService {
         vehicle.setFood(dto.getFood());
         vehicle.setFuel(dto.getFuel());
         vehicle.setStep(dto.getStep());
-        vehicle.setDiversos(dto.getDiversos());
         vehicle.setObservations(dto.getObservations());
     }
 
@@ -257,9 +256,6 @@ public class VehicleService {
         }
         if (dto.getStep() != null) {
             vehicle.setStep(dto.getStep());
-        }
-        if (dto.getDiversos() != null) {
-            vehicle.setDiversos(dto.getDiversos());
         }
         if (dto.getObservations() != null) {
             vehicle.setObservations(dto.getObservations());

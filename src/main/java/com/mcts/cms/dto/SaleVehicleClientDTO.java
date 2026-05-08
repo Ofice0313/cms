@@ -35,6 +35,11 @@ public class SaleVehicleClientDTO {
     @JsonProperty("vehicle_id")
     private VehicleDTO vehicle;
 
+    private BigDecimal diversos;
+
+    @JsonProperty("sale_value_with_diversos")
+    private BigDecimal saleValueWithDiversos;
+
     private BigDecimal profit;
 
     public SaleVehicleClientDTO(Sale entity) {
@@ -42,6 +47,8 @@ public class SaleVehicleClientDTO {
         this.saleDate = entity.getSaleDate();
         this.observations = entity.getObservations();
         this.saleValue = entity.getSaleValue();
+        this.diversos = entity.getDiversos();
+        this.saleValueWithDiversos = entity.getSaleValueWithDiversos();
         this.profit = entity.getProfit();
         this.client = new ClientDTO(entity.getClient());
         this.vehicle = new VehicleDTO(entity.getVehicle());
