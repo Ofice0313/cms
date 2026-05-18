@@ -2,7 +2,6 @@ package com.mcts.cms.config;
 
 import com.mcts.cms.security.jwt.JwtTokenFilter;
 import com.mcts.cms.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,13 +29,6 @@ import java.util.Map;
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-
-    public SecurityConfig(JwtTokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
-
     @Bean
     PasswordEncoder passwordEncoder() {
         PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(
@@ -62,7 +54,7 @@ public class SecurityConfig {
 
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider tokenProvider) throws Exception {
         JwtTokenFilter customFilter = new JwtTokenFilter(tokenProvider);
 
         //@formatter:off
