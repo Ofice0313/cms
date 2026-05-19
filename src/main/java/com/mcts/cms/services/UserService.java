@@ -27,9 +27,10 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PermissionRepository permissionRepository;
 
+    /*
     public UserService(UserRepository repository) {
         this.userRepository = repository;
-    }
+    }*/
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
