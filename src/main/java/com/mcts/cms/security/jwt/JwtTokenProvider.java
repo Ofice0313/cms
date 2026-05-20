@@ -11,12 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Base64;
 import java.util.Date;
@@ -32,10 +32,17 @@ public class JwtTokenProvider {
     @Value("${spring.security.jwt.token.expire-length:3600000}")
     private long validityInMilliseconds = 3600000;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    @Value("${spring.security.jwt.token.issuer:cms-api}")
+    private String issuer;
+
+    private final UserDetailsService userDetailsService;
 
     Algorithm algorithm = null;
+
+    @Autowired
+    public JwtTokenProvider(@Lazy UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostConstruct
     protected void init() {
@@ -50,7 +57,7 @@ public class JwtTokenProvider {
         String refreshToken = getRefreshToken(email, roles, now);
         return new TokenDTO(email, true, now, validity, accessToken, refreshToken);
     }
-    
+
     public TokenDTO refreshToken(String refreshToken) {
 
         var token = "";
@@ -67,13 +74,12 @@ public class JwtTokenProvider {
     }
 
     private String getAccessToken(String email, List<String> roles, Date now, Date validity) {
-        String issueUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
                 .withClaim("roles", roles)
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .withSubject(email)
-                .withIssuer(issueUrl)
+                .withIssuer(issuer)
                 .sign(algorithm);
     }
 
